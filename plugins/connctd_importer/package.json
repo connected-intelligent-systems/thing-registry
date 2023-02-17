@@ -1,0 +1,12 @@
+{
+    "name": "connctd-importer",
+    "version": "0.0.1",
+    "description": "Import thing descriptions from connctd",
+    "main": "index.js",
+    "author": "Sebastian Alberternst <sebastian.alberternst@dfki.de>",
+    "license": "UNLICENSED",
+    "previewImage": "https://static1.squarespace.com/static/5ac4ed6cf407b4b7b48db8ca/t/5b00305570a6ada6e219de35/1605696727204/?format=1500w",
+    "dependencies": {
+        "node-fetch": "^2.6.1"
+    }
+}

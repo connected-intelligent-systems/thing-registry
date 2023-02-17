@@ -1,0 +1,31 @@
+version: '3.1'
+
+services:
+
+  mocha:
+    build: .
+    volumes:
+      - ./index.js:/app/index.js
+      - ./api-doc.yml:/app/api-doc.yml
+      - ./lib:/app/lib
+      - ./plugins:/app/plugins
+      - ./test:/app/test
+      - ./config/registry/keycloak.json:/app/keycloak.json
+    environment:
+      NODE_ENV: development
+      REGISTRY_PLUGINS: connctd-importer;fhdo-importer
+    command: npm run test
+
+  coverage:
+    build: .
+    volumes:
+      - ./index.js:/app/index.js
+      - ./api-doc.yml:/app/api-doc.yml
+      - ./lib:/app/lib
+      - ./plugins:/app/plugins
+      - ./test:/app/test
+      - ./config/registry/keycloak.json:/app/keycloak.json
+    environment:
+      NODE_ENV: development
+      REGISTRY_PLUGINS: connctd-importer;fhdo-importer
+    command: npm run coverage

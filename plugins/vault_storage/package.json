@@ -1,0 +1,11 @@
+{
+    "name": "vault-storage",
+    "version": "0.0.1",
+    "description": "Stores thing credentials in hashicorps vault",
+    "main": "index.js",
+    "author": "Sebastian Alberternst <sebastian.alberternst@dfki.de>",
+    "license": "UNLICENSED",
+    "dependencies": {
+        "node-vault": "^0.9.22"
+    }
+}

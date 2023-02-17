@@ -1,0 +1,1161 @@
+openapi: "3.0.0"
+info:
+  title: Thing Description Registry / Directory
+  version: 0.3.6
+servers:
+- url: https://thing-registry.apps.foresight.aareon.com/api/
+  description: Foresight Thing Registry 
+paths:
+  /things:
+    get:
+      description: Returns all registered thing descriptions
+      parameters:
+      - in: query
+        name: limit
+        schema:
+          type: integer
+        required: false
+        description: Limit the returned thing descriptions
+        example: 30
+      - in: query
+        name: skip
+        schema:
+          type: integer
+        required: false
+        description: Skip over a specific number of thing descriptions
+        example: 1
+      - in: query
+        name: unexposed
+        schema:
+          type: boolean
+        required: false
+        description: Return unexposed thing descriptions
+        example: true
+      - in: query
+        name: resolve
+        schema:
+          type: boolean
+        required: false
+        description: Resolve all thing descriptions
+        example: false
+      - in: query
+        name: owner
+        schema:
+          type: array
+          items:
+            type: string
+            example: household1235@foresight-plattform.de
+        required: false
+        description: Filter by owner
+      - in: query
+        name: type
+        schema:
+          type: array
+          items:
+            type: string
+            example: iot:PowerMonitoring
+        required: false
+        description: Type(s) of the thing
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Things"
+      security:
+        - auth:
+          - registry.thing.read
+    post:
+      description: Creates a new thing description
+      requestBody:
+        description: Thing description added
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ThingDescription'
+      responses:
+        '201':
+          description: Successful operation
+          headers:
+              location:
+                schema:
+                  type: string
+                  description: Location of the new thing description
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreatedThing"
+        '400':
+          description: Invalid description
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+      security:
+        - auth:
+          - registry.thing.create
+  /things/{id}:
+    get:
+      description: Returns a specific thing description
+      parameters:
+      - name: id
+        in: path
+        description: ID of the thing description
+        example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: unexposed
+        schema:
+          type: boolean
+        required: false
+        description: Return unexposed thing description
+        example: false
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/n-triples:
+              schema:
+                type: string
+            application/td+json:
+              schema:
+                $ref: "#/components/schemas/ThingDescription"
+            application/ld+json:
+              schema:
+                $ref: "#/components/schemas/ThingDescription"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ThingDescription"
+        '404':
+          description: Thing description not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+        - auth:
+          - registry.thing.read
+    put:
+      description: Update a specific thing description
+      parameters:
+        - name: id
+          in: path
+          description: ID of the thing description
+          example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Updated thing description
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ThingDescription'
+      responses:
+        '200':
+          description: Thing description updated
+        '400':
+          description: Invalid thing description
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"      
+        '404':
+          description: Thing description not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+        - auth:
+          - registry.thing.update
+    delete:
+      description: Delete a specific thing description
+      parameters:
+        - name: id
+          in: path
+          description: ID of the thing description
+          example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Thing description deleted
+        '404':
+          description: Thing description not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+        - auth:
+          - registry.thing.delete
+  /things/{id}/credentials:
+    put:
+      description: Updates the credentials of thing. Only the owner can update credentials.
+      parameters:
+        - name: id
+          in: path
+          description: ID of the thing description
+          example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Credentials'
+      responses:
+        '200':
+          description: Successful operation
+      security:
+        - auth:
+          - registry.thing.credentials 
+    get:
+      description: Return the credentials of thing. Only the owner can return credentials.
+      parameters:
+        - name: id
+          in: path
+          description: ID of the thing description
+          example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+      security:
+        - auth:
+          - registry.thing.credentials
+  /things/{id}/access:
+    get:
+      description: Return information about the permissions and access right of the thing
+      parameters:
+        - name: id
+          in: path
+          description: ID of the thing description
+          example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Access"
+      security:
+        - auth:
+          - registry.thing.read
+  /things/{id}/targets:
+    get:
+      description: Return information about the targets of a thing
+      parameters:
+        - name: id
+          in: path
+          description: ID of the thing description
+          example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Targets"
+      security:
+        - auth:
+          - registry.targets.read
+  /things/{id}/affordances/{type}/{name}/{index}/target:
+    get:
+      description: Return information about the targets of a thing
+      parameters:
+        - name: id
+          in: path
+          description: ID of the thing description
+          example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
+          required: true
+          schema:
+            type: string
+        - name: type
+          in: path
+          description: type of the affordance
+          example: properties
+          required: true
+          schema:
+            type: string
+            enum: [properties, actions, events]
+        - name: name
+          in: path
+          description: name of the affordance
+          example: sensore_42-value
+          required: true
+          schema:
+            type: string
+        - name: index
+          in: path
+          description: index of the form
+          example: 1
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Target"
+      security:
+        - auth:
+          - registry.targets.read
+    put:
+      description: Update a target of a thing
+      parameters:
+        - name: id
+          in: path
+          description: ID of the thing description
+          example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
+          required: true
+          schema:
+            type: string
+        - name: type
+          in: path
+          description: type of the affordance
+          example: properties
+          required: true
+          schema:
+            type: string
+            enum: [properties, actions, events]
+        - name: name
+          in: path
+          description: name of the affordance
+          example: sensor_42-value
+          required: true
+          schema:
+            type: string
+        - name: index
+          in: path
+          description: index of the form
+          example: 0
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateTarget"
+      responses:
+        '200':
+          description: Successful operation
+      security:
+        - auth:
+          - registry.targets.update
+  /affordances:
+    get:
+      description: Lists affordances
+      parameters:
+      - in: query
+        name: limit
+        schema:
+          type: integer
+        required: false
+        description: Limit the returned affordances 
+        example: 30
+      - in: query
+        name: skip
+        schema:
+          type: integer
+        required: false
+        description: Skip over a specific number of affordances
+        example: 0
+      - in: query
+        name: unexposed
+        schema:
+          type: boolean
+        required: false
+        description: Return unexposed taffordances
+        example: false
+      - in: query
+        name: resolve
+        schema:
+          type: boolean
+        required: false
+        description: Resolve all affordances
+        example: false
+      - in: query
+        name: resolveThing
+        schema:
+          type: boolean
+        required: false
+        description: Resolve all thing descriptions
+        example: false
+      - in: query
+        name: thingId
+        schema:
+          type: array
+          items:
+            type: string
+        required: false
+        description: Filter by thing ids
+        example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
+      - in: query
+        name: owner
+        schema:
+          type: array
+          items:
+            type: string
+        required: false
+        description: Filter by owner
+        example: household1235@foresight-plattform.de
+      - in: query
+        name: type
+        schema:
+          type: array
+          items:
+            type: string
+        required: false
+        description: Type(s) of the thing
+        example: iot:PowerMonitoring
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Affordances"
+      security:
+        - auth:
+          - registry.thing.read
+  /query:
+    get:
+      description: Lists affordances
+      parameters:
+      - in: query
+        name: jsonpath
+        schema:
+          type: string
+        required: false
+        description: A jsonpath query
+      - in: query
+        name: jsonata
+        schema:
+          type: string
+        required: false
+        description: A jsonata query
+      - in: query
+        name: frame
+        schema:
+          type: string
+        required: false
+        description: a jsonld frame
+      - in: query
+        name: unexposed
+        schema:
+          type: boolean
+        required: false
+        description: Return unexposed affordances
+      responses:
+        '200':
+          description: Returns all registered affordances
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Affordances"
+      security:
+        - auth:
+          - registry.thing.read
+  /validate:
+    post:
+      description: Validates a thing description
+      requestBody:
+        description: Thing description to validate
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ThingDescription'
+      responses:
+        '201':
+          description: Successful operation
+        '400':
+          description: Thing description is invalid
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+      security:
+        - auth:
+          - registry.thing.validate
+  /tickets:
+     get:
+      description: Return all tickets of the affordance of a specific user
+      parameters:
+        - name: thingId
+          in: query
+          description: Filter by thing id
+          example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
+          schema:
+            type: string
+        - name: requester
+          in: query
+          description: Filter by requester
+          example: household1235@foresight-plattform.de
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tickets"
+      security:
+        - auth:
+          - registry.tickets.read
+     post:
+      description: Create a new ticket for a resource
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTicket"
+      responses:
+        '201':
+          description: Successful operation
+      security:
+        - auth:
+          - registry.tickets.create
+  /tickets/{id}:
+     delete:
+      description: Return all tickets of the affordance of a specific user
+      parameters:
+        - name: id
+          in: path
+          description: ID of the ticket
+          example: fdf488a8-2b27-4353-92a4-05f697e720cc
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+      security:
+        - auth:
+          - registry.tickets.delete
+  /version:
+    get:
+      description: Returns the version of the registry
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/n-triples:
+              schema:
+                $ref: '#/components/schemas/ServerVersion'
+  /plugins:
+    get:
+      description: Returns all plugins
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Plugins"
+      security:
+        - auth:
+          - registry.plugin.read
+  /plugins/{id}:
+    get:
+      description: Return a plugin description
+      parameters:
+        - name: id
+          in: path
+          description: Name of the plugin
+          example: connctd-importer
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plugin'
+      security:
+        - auth:
+          - registry.plugin.read
+  /plugins/{id}/settings:
+    put:
+      description: Update the settings of a plugin
+      parameters:
+        - name: id
+          in: path
+          description: Name of the plugin
+          example: connctd-plugin
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PluginSettings'
+      responses:
+        '200':
+          description: Successful operation
+      security:
+        - auth:
+          - registry.plugin.write
+  /discovery/run:
+    put:
+      description: Discover things
+      responses:
+        '200':
+          description: Successful operation
+      security:
+        - auth:
+          - registry.plugin.discover
+  /discovery/things:
+    get:
+      description: Returns a list of discovered things
+      parameters:
+        - name: resolve
+          in: query
+          description: True if the thing description should resolve
+          example: false
+          schema:
+            type: boolean
+        - name: showDuplicates
+          in: query
+          description: True if already known thing ids should be shown
+          example: false
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DiscoveredThings"
+      security:
+        - auth:
+          - registry.plugin.discover
+  /discovery/things/{thingId}:
+    get:
+      description: Returns a discovered thing by ID
+      parameters:
+        - name: thingId
+          in: path
+          description: ID of the thing
+          example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DiscoveredThing"
+      security:
+        - auth:
+          - registry.plugin.discover       
+  /discovery/import:
+    put:
+      description: Import discovered things
+      requestBody:
+        description: Discovered things to import
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              description: Array of ids
+              example: 
+                [
+                  "uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b",
+                  "uri:urn:1e81a651-11f2-4614-a29f-1d78c8f2c951",
+                ]
+              items:
+                type: string
+                description: ID of a discovered thing
+      responses:
+        '200':
+          description: Successful operation
+      security:
+        - auth:
+          - registry.plugin.discover
+components:
+  schemas:
+    ServerVersion:
+      type: object
+      properties: 
+        version:
+          type: string
+          description: The version of the registry service
+          example: 0.3.5
+    Affordance:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the affordance
+          example: sensor_470-value
+        owner:
+          type: string
+          description: Owner of the affordance
+          example: household1235@foresight-plattform.de
+        thingId:
+          type: string
+          description: Related ID of the thing
+          example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
+        types:
+          type: array
+          description: Semantic types of the affordance
+          example: 
+            [
+              "PropertyAffordance",
+              "iot:TotalActivePower"
+            ]
+          items:
+            type: string
+        description:
+          type: object
+          description: Contains the affordance from the thing description if resolved
+          example: 
+            {
+              "type": "object",
+              "@type": [
+                  "PropertyAffordance",
+                  "iot:TotalActivePower"
+              ],
+              "forms": [
+                  {
+                      "op": "readproperty",
+                      "href": "https://thing-registry.apps.foresight.aareon.com/api/thing/urn:uri:6f0685ad-8a08-431a-b700-6dd1a236335b",
+                      "contentType": "application/json"
+                  }
+              ],
+              "properties": {
+                  "value": {
+                      "type": "number",
+                      "@type": "iot:ActivePowerData",
+                      "schema:dateModified": {
+                          "@id": "dateModified"
+                      }
+                  },
+                  "lastUpdate": {
+                      "@id": "dateModified",
+                      "type": "string",
+                      "@type": "schema:DateTime"
+                  }
+              }
+            }
+    Affordances:
+      type: array
+      items: 
+        $ref: "#/components/schemas/Affordance"
+    CreatedThing:
+      type: object
+      description: Returns the created thing id
+      properties:
+        id: 
+          type: string
+          example: uri:urn:2b504eab-b0c5-46e1-abf2-b849f1b53cbb
+      required: 
+        - id
+    ThingDescription:
+      type: object
+      description: A valid W3C Thing Description (https://w3c.github.io/wot-thing-description/) 
+      example:
+        {
+          "@context": "https://www.w3.org/2019/wot/td/v1",
+          "id": "urn:dev:ops:32473-WoTLamp-1234",
+          "title": "MyLampThing",
+          "securityDefinitions": {
+              "basic_sc": {"scheme": "basic", "in":"header"}
+          },
+          "security": ["basic_sc"],
+          "properties": {
+              "status" : {
+                  "type": "string",
+                  "forms": [{"href": "https://mylamp.example.com/status"}]
+              }
+          },
+          "actions": {
+              "toggle" : {
+                  "forms": [{"href": "https://mylamp.example.com/toggle"}]
+              }
+          },
+          "events":{
+              "overheating":{
+                  "data": {"type": "string"},
+                  "forms": [{
+                      "href": "https://mylamp.example.com/oh",
+                      "subprotocol": "longpoll"
+                  }]
+              }
+          }
+      }
+    Things:
+      type: array
+      items:
+        $ref: "#/components/schemas/Thing"
+    Thing:
+      type: object
+      description: A summary for a stored thing
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the thing
+          example: uri:urn:b960ec68-5ef8-4f54-a50c-2a5a347730d1
+        title:
+          type: string
+          description: The title of the ting description
+          example: My Example Thing
+        description:
+          $ref: "#/components/schemas/ThingDescription"
+        types:
+          type: array
+          description: Semantic types of the thing 
+          example:
+            [
+              "iot:BinarySwitchControl",
+              "iot:PowerMonitoring"
+            ]
+          items:
+            type: string
+            description: Semantic type of a thing
+        owner:
+          type: string
+          description: Name of the owner
+          example: household1235@foresight-plattform.de
+        href:
+          type: string
+          format: uri
+          description: Link to the full thing description
+      required:
+        - id
+        - title
+        - types
+        - owner
+        - href
+    Credentials:
+      type: array
+      additionalProperties: false
+      items:
+        oneOf:
+          - $ref: '#/components/schemas/BasicCredentials'
+          - $ref: '#/components/schemas/BearerCredentials'
+          - $ref: '#/components/schemas/ApiKeyCredentials'
+    BasicCredentials: 
+      type: object
+      required:
+        - security
+        - username
+        - password
+      additionalProperties: false
+      properties: 
+        security: 
+          type: string
+          description: Name of the security definition in the thing description
+          example: basic_sc
+        username: 
+          type: string
+          description: Username of the basic authentication
+        password:
+          type: string
+          description: Password of the basic authentication
+    BearerCredentials: 
+      type: object
+      required:
+        - security
+        - token
+      additionalProperties: false
+      properties: 
+        security: 
+          type: string
+          description: Name of the security definition in the thing description
+          example: bearer_sc
+        token: 
+          type: string
+          description: The bearer token to use
+    ApiKeyCredentials:
+      type: object
+      additionalProperties: false
+      properties:
+        security: 
+          type: string
+          description: Name of the security definition in the thing description
+          example: api_sc
+        apiKey:
+          type: string
+          description: The api key to use
+    DiscoveredThing:
+      type: object
+      properties:
+        id: 
+          type: string
+          description: id of the discovered thing
+          example: uri:urn:c5a6792a-2d7d-4be3-a6b6-9d1f21cf0490
+        foundAt:
+          type: string
+          description: time when the thing was discovered
+          example: 2021-03-30T07:06:31.930Z
+        source:
+          type: string
+          description: name of the plugin that discovered the thing
+          example: connctd-import
+        description: 
+          $ref: '#/components/schemas/ThingDescription'
+    DiscoveredThings:
+      type: array
+      items:
+       $ref: "#/components/schemas/DiscoveredThing" 
+    Plugins:
+      type: array
+      items:
+        $ref: "#/components/schemas/Plugin"
+    Plugin:
+      type: object
+      properties: 
+        name: 
+          type: string
+          description: Type of the plugin
+        version:
+          type: string
+          description: Version of the plugin
+          example: 0.0.1
+        author:
+          type: string
+          description: Email of the author
+          example: sebastian.alberternst@dfki.de
+        description:
+          type: string
+          description: Description of the plugin
+        previewImage:
+          type: string
+          format: uri
+          description: Link to an image for the plugin
+        schema:
+          $ref: "#/components/schemas/PluginSchema"
+        settings:
+          $ref: "#/components/schemas/PluginSettings"
+    PluginSchema:
+      description: A json schema describing the plugin settings 
+      type: object
+    PluginSettings:
+      description: Plugin settings described by the plugin schema
+      oneOf:
+        - type: string
+        - type: number
+        - type: integer
+        - type: boolean
+        - type: array
+        - type: object
+    Access:
+      type: object
+      properties:
+        owner:
+          type: boolean
+          description: True if the requester is the owner of the resource
+        permissions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Permission"
+      required: 
+        - owner
+    Permission:
+      type: object
+      properties:
+        name:
+          type: string
+          description: name of the resources
+        scopes: 
+          $ref: "#/components/schemas/Scopes"
+      required: 
+        - name
+    Scope:
+      type: string
+      example: GET
+      description: a scope for a resources
+    Scopes:
+      type: array
+      description: list of scopes
+      example:
+        [ "GET", "PUT" ]
+      items:
+        $ref: "#/components/schemas/Scope"
+    Target:
+      type: object
+      properties:
+        href: 
+          type: string
+          format: uri
+          description: link to the target to update the authorization
+        authorized:
+          type: boolean
+          description: authorized targets can be called via the exposed thing api
+        security:
+          type: array
+          description: list of security mechanisms for the target
+          items:
+            type: string
+    Targets:
+      type: array
+      items:
+        $ref: "#/components/schemas/Target"
+    UpdateTarget:
+      type: object
+      properties:
+        authorized: 
+          type: boolean
+          description: Sets if the target is authorized and can be used via the exposed thing interface
+    CreateTicket:
+      type: object
+      properties:
+        resource:
+          type: string
+          description: The name of the resource
+          example: uri:urn:c5a6792a-2d7d-4be3-a6b6-9d1f21cf0490
+        requester: 
+          type: string
+          description: The name of the requester who wants access to the resource
+          example: household12345@foresight-plattform.de
+        scope: 
+          $ref: "#/components/schemas/Scope" 
+      required:
+        - requester
+        - scope
+        - resource
+    Ticket:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id of the ticket
+          example: d4fdbdd9-a586-4dfc-8858-0cdda8c8d463
+        granted:
+          type: boolean
+          description: Is access granted
+        resource:
+          type: string
+          description: ID of the resource
+          example: 5dd2fdfa-b406-418f-85ae-70f2b3409738
+        resourceName:
+          type: string
+          description: Name of the resource
+          example: uri:urn:bcb8182e-bdb2-4921-a11c-ec5fd58df524
+        requester:
+          type: string
+          description: Id of the requester
+          example: bcb8182e-bdb2-4921-a11c-ec5fd58df524
+        requesterName:
+          type: string
+          description: Name of the requester
+          example: household1235@foresight-plattform.de
+        owner:
+          type: string
+          description: Id of the owner
+          example: 64ea59bc-24a9-4008-af35-b7bfc816f313
+        ownerName:
+          type: string
+          description: Name of the requester
+          example: household2341@foresight-plattform.de
+        scope:
+          type: string
+          description: Id of the scope
+          example: 71f41525-7d0c-4bf6-b4e5-0cd282dc6c11
+        scopeName:
+          $ref: "#/components/schemas/Scope" 
+    Tickets:
+      type: array
+      items:
+        $ref: "#/components/schemas/Ticket" 
+    Error:
+      type: object
+      properties:
+        status: 
+          type: integer
+          description: http status
+        code: 
+          type: string
+          description: "error type"
+        message: 
+          type: string
+          description: "Human readable error code"
+      required:
+        - message
+        - code
+        - status
+    ValidationError:
+      allOf:  
+        - $ref: '#/components/schemas/Error'
+        - type: object
+          required:
+            - info
+          properties:
+            info:
+              type: array
+              items:
+                type: object
+                properties:
+                  keyword: 
+                    type: string
+                  dataPath: 
+                    type: string
+                  schemaPath: 
+                    type: string
+                  params: 
+                    type: object
+                    properties: 
+                      missingProperty: 
+                        type: string
+                  message: 
+                    type: string
+  securitySchemes:
+    auth:
+      type: oauth2
+      flows: 
+        authorizationCode:
+          authorizationUrl: 'https://aareoniam.apps.foresight.aareon.com/auth/realms/foresight/protocol/openid-connect/auth'
+          tokenUrl: 'https://aareoniam.apps.foresight.aareon.com/auth/realms/foresight/protocol/openid-connect/token'
+          scopes:
+            registry.thing.read: ability to read thing descriptions
+            registry.thing.create: create a thing description
+            registry.thing.update: update a thing description
+            registry.thing.delete: delete a thing description
+            registry.thing.validate: validate a thing description
+            registry.plugin.read: read plugins
+            registry.plugin.write: write plugins settings
+            registry.plugin.discover: use plugins to discover new things
+            registry.thing.credentials: read and write thing credentials
+            registry.thing.execute: execute forms of a thing
+            registry.targets.read: read targets
+            registry.targets.update: update targets
+            registry.tickets.create: create tickets
+            registry.tickets.update: update tickets
+            registry.tickets.delete: delete tickets 

@@ -1,0 +1,59 @@
+version: "3.1"
+
+services:
+  registry:
+    build: .
+    volumes:
+      - ./index.js:/app/index.js
+      - ./api-doc.yml:/app/api-doc.yml
+      - ./lib:/app/lib
+      - ./plugins:/app/plugins
+      - ./config/registry/keycloak.json:/app/keycloak.json
+    environment:
+      NODE_ENV: development
+      RESOURCE_SERVER_AUDIENCE: resources
+      KEYCLOAK_HOST: http://keycloak:8080
+      KEYCLOAK_REALM: foresight
+      RESOURCE_CLIENT_ID: resources
+      RESOURCE_CLIENT_SECRET: af617399-70e2-42d7-b9db-1563338799c5
+    ports:
+      - 8090:80
+      - 9229:9229
+    depends_on: 
+      - mongo
+      - keycloak
+      - redis
+
+  mongo:
+    image: mongo
+    healthcheck:
+      test: test $$(echo "rs.initiate().ok || rs.status().ok" | mongo --quiet) -eq 1
+      interval: 10s
+      start_period: 30s
+    entrypoint: ["/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0"]
+
+  mongo-express:
+    image: mongo-express
+    ports:
+      - 8081:8081
+    restart: always
+
+  keycloak: 
+    image: jboss/keycloak
+    volumes:
+    - ./config/keycloak/realm-export.json:/tmp/realm-export.json
+    ports:
+      - 8080:8080
+    environment:
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: password
+      KEYCLOAK_IMPORT: /tmp/realm-export.json -Dkeycloak.profile.feature.upload_scripts=enabled
+      JAVA_OPTS_APPEND: "-Dkeycloak.profile.feature.upload_scripts=enabled -Dkeycloak.profile=preview"
+
+  redis:
+    image: redis
+
+networks:
+  default:
+    name: registry-network
+    driver: bridge

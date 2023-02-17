@@ -1,0 +1,64 @@
+# Licensed under the terms of http://www.apache.org/licenses/LICENSE-2.0
+
+## Fuseki Server configuration file.
+
+@prefix :        <#> .
+@prefix fuseki:  <http://jena.apache.org/fuseki#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ja:      <http://jena.hpl.hp.com/2005/11/Assembler#> .
+@prefix tdb:     <http://jena.apache.org/2016/tdb#> .
+@prefix perm:    <http://apache.org/jena/permissions/Assembler#> .
+@prefix fo:      <https://linked.solutions/fuseki-oidc/ontology#> .
+
+tdb:DatasetTDB  rdfs:subClassOf  ja:RDFDataset .
+tdb:GraphTDB    rdfs:subClassOf  ja:Model .
+perm:Model      rdfs:subClassOf  ja:NamedModel .
+
+[] rdf:type fuseki:Server .
+
+[] ja:loadClass    "org.apache.jena.permissions.SecuredAssembler" .
+[] ja:loadClass    "solutions.linked.jena.security.SecuredDatasetAssembler" .
+
+:securityGraph rdf:type tdb:GraphTDB ;
+    tdb:dataset   <#tdb_sense_dataset_readwrite> ;
+    tdb:graphName <urn:fuseki-oidc:security> 
+    .
+
+:secEvaluator rdf:type perm:Evaluator ;
+    perm:evaluatorClass "solutions.linked.jena.security.GraphSecurityEvaluator" 
+    .
+
+<#tdb_sense_dataset_readwrite> rdf:type fo:SecuredDataset ;
+    tdb:location         "things" ;
+    perm:evaluatorImpl   :secEvaluator ;
+    .
+
+<#service_sense> rdf:type fuseki:Service ;
+    rdfs:label                        "Stores Thing Descriptions" ;
+    fuseki:name                       "things" ;
+    fuseki:serviceQuery               "query" ;
+    fuseki:serviceQuery               "sparql" ;
+    fuseki:serviceUpdate              "update" ;
+    fuseki:serviceUpload              "upload" ;
+    fuseki:serviceReadWriteGraphStore "data" ;
+    fuseki:serviceReadGraphStore      "get" ;
+    fuseki:dataset                    <#tdb_sense_dataset_readwrite> ;
+    .
+
+<#service_vocab> rdf:type fuseki:Service ;
+    rdfs:label                        "Stores Vocbulary of Thing Descriptions" ;
+    fuseki:name                       "vocab" ;
+    fuseki:serviceQuery               "query" ;
+    fuseki:serviceQuery               "sparql" ;
+    fuseki:serviceUpdate              "update" ;
+    fuseki:serviceUpload              "upload" ;
+    fuseki:serviceReadWriteGraphStore "data" ;
+    fuseki:serviceReadGraphStore      "get" ;
+    fuseki:dataset                    <#tdb_vocab_dataset_readwrite> ;
+    .
+
+<#tdb_vocab_dataset_readwrite> rdf:type tdb:DatasetTDB2 ;
+    tdb:location "vocab" ;
+    tdb:unionDefaultGraph false;
+    .
