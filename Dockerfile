@@ -1,4 +1,4 @@
-FROM node:12.21.0
+FROM node:20
 
 RUN apt-get update && apt-get install -y \
   dumb-init \

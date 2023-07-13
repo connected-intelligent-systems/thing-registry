@@ -1,8 +1,14 @@
 {
-    "realm": "foresight",
-    "bearer-only": true,
-    "auth-server-url": "http://keycloak:8080/auth",
-    "ssl-required": "external",
-    "resource": "registry",
-    "confidential-port": 0
+  "realm": "dataspace",
+  "auth-server-url": "http://auth.192-168-178-60.nip.io/",
+  "ssl-required": "external",
+  "resource": "api-gateway",
+  "verify-token-audience": true,
+  "credentials": {
+    "secret": "7SkmAdTp8xhL"
+  },
+  "confidential-port": 0,
+  "policy-enforcer": {
+    "credentials": {}
+  }
 }
