@@ -177,9 +177,7 @@ async function initServer () {
     securityHandlers: {
       auth: (req, scopes) => {
         if (req.auth) {
-          const tokenScopes = req.auth.access_token.content.scope.split(
-            ' '
-          )
+          const tokenScopes = req.auth.access_token.content.scope.split(' ')
           if (scopes.every(r => tokenScopes.includes(r))) {
             return true
           } else {
