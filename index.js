@@ -94,7 +94,7 @@ function installExposedRoutes (app, basePaths) {
     app.all(
       `${p}/things/:id/affordances/:type/:name/:index/exposed`,
       async (req, res, next) => {
-        if (req.kauth && req.kauth.grant) {
+        if (req.auth) {
           const tokenScopes = req.auth.access_token.content.scope.split(' ')
           if (tokenScopes.includes('registry.thing.execute')) {
             try {
