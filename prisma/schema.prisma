@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgres"
+  url      = env("DATABASE_URL")
+}
+
+model Thing {
+  id                  String                @id
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  title               String
+  description         Json
+  owner               String
+  types               String[]
+  ThingAuthorizations ThingAuthorization[]
+  SecurityDefinitions SecurityDefinitions[]
+  Affordances         Affordance[]
+}
+
+enum AffordanceType {
+  property
+  action
+  event
+}
+
+model Affordance {
+  id                       String                    @id
+  type                     AffordanceType
+  description              Json
+  name                     String
+  types                    String[]
+  owner                    String
+  source                   String?
+  thingId                  String
+  Thing                    Thing                     @relation(fields: [thingId], references: [id])
+  AffordanceAuthorizations AffordanceAuthorization[]
+}
+
+enum ThingAuthorizationScope {
+  read
+}
+
+model ThingAuthorization {
+  id       Int                     @id @default(autoincrement())
+  thingId  String
+  entityId String
+  scope    ThingAuthorizationScope @default(read)
+  Thing    Thing                   @relation(fields: [thingId], references: [id])
+
+  @@unique([thingId, entityId])
+}
+
+enum AffordanceAuthorizationScope {
+  execute
+}
+
+model AffordanceAuthorization {
+  id           Int                     @id @default(autoincrement())
+  affordanceId String
+  entityId     String
+  scope        ThingAuthorizationScope @default(read)
+  Affordance   Affordance              @relation(fields: [affordanceId], references: [id])
+}
+
+model SecurityDefinitions {
+  id                 Int    @id @default(autoincrement())
+  name               String
+  securityDefinition Json
+  thingId            String
+  Thing              Thing  @relation(fields: [thingId], references: [id])
+}

@@ -18,7 +18,7 @@ const {
 
 const Port = env
   .get('PORT')
-  .default(80)
+  .default(8080)
   .asIntPositive()
 
 /**
@@ -53,7 +53,7 @@ async function initModels () {
   for (const name of Object.keys(models)) {
     const { init } = models[name]
     if (init !== undefined) {
-      await init()
+      // await init()
     }
   }
 }
@@ -176,15 +176,16 @@ async function initServer () {
     },
     securityHandlers: {
       auth: (req, scopes) => {
-        if (req.auth) {
-          const tokenScopes = req.auth.access_token.content.scope.split(' ')
-          if (scopes.every(r => tokenScopes.includes(r))) {
-            return true
-          } else {
-            throw new InvalidOrMissingScope()
-          }
-        }
-        throw new InvalidOrMissingToken()
+        return true
+        // if (req.auth) {
+        //   const tokenScopes = req.auth.access_token.content.scope.split(' ')
+        //   if (scopes.every(r => tokenScopes.includes(r))) {
+        //     return true
+        //   } else {
+        //     throw new InvalidOrMissingScope()
+        //   }
+        // }
+        // throw new InvalidOrMissingToken()
       }
     }
   })
