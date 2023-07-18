@@ -74,3 +74,14 @@ Authorization: Bearer {{token}}
 
 GET http://localhost:8080/registry/things
 Authorization: Bearer {{token}}
+
+
+###
+
+GET  http://localhost:8080/registry/discovery/things
+Authorization: Bearer {{token}}
+
+###
+
+GET  http://localhost:8080/registry/discovery/things/uri:urn:81e0f082-0658-4a21-a841-113deb7b4fac
+Authorization: Bearer {{token}}

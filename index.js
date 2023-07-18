@@ -8,6 +8,8 @@ const openapi = require('express-openapi')
 const middlewares = require('./lib/middlewares')
 const { setupDnssd } = require('./lib/utils/dnssd')
 const { readYaml } = require('./lib/utils/yaml')
+const { loadPlugins } = require('./lib/queries')
+
 const {
   HttpError,
   InvalidOrMissingScope,
@@ -135,6 +137,9 @@ function installErrorHandler (app) {
 async function initServer () {
   const app = initExpress()
   const apiDoc = generateApiDoc()
+
+  await loadPlugins()
+
   const framework = openapi.initialize({
     apiDoc,
     app,

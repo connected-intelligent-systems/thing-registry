@@ -85,7 +85,7 @@ model Target {
 model DiscoveredThing {
   id          String   @id
   foundAt     DateTime @default(now())
-  description String
+  description Json
   source      String
   owner       String
 }
