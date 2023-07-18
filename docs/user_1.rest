@@ -69,3 +69,8 @@ Authorization: Bearer {{token}}
 
 PUT http://localhost:8080/registry/discovery/run
 Authorization: Bearer {{token}}
+
+###
+
+GET http://localhost:8080/registry/things
+Authorization: Bearer {{token}}

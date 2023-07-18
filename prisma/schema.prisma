@@ -17,6 +17,7 @@ model Thing {
   title               String
   description         Json
   owner               String
+  source              String?
   types               String[]
   ThingAuthorizations ThingAuthorization[]
   Affordances         Affordance[]
