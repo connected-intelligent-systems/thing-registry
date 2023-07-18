@@ -6,8 +6,6 @@ const path = require('path')
 const http = require('http')
 const openapi = require('express-openapi')
 const middlewares = require('./lib/middlewares')
-const services = require('./lib/services')
-const models = require('./lib/models')
 const { setupDnssd } = require('./lib/utils/dnssd')
 const { readYaml } = require('./lib/utils/yaml')
 const {
@@ -32,30 +30,6 @@ function listen (app, port) {
       resolve(server)
     })
   })
-}
-
-/**
- * Inits all services by calling the init method.
- */
-async function initServices () {
-  for (const name of Object.keys(services)) {
-    const { init } = services[name]
-    if (init !== undefined) {
-      await init()
-    }
-  }
-}
-
-/**
- * Inits all the models by calling the init method
- */
-async function initModels () {
-  for (const name of Object.keys(models)) {
-    const { init } = models[name]
-    if (init !== undefined) {
-      // await init()
-    }
-  }
 }
 
 /**
@@ -161,10 +135,6 @@ function installErrorHandler (app) {
 async function initServer () {
   const app = initExpress()
   const apiDoc = generateApiDoc()
-
-  await initModels()
-  await initServices()
-
   const framework = openapi.initialize({
     apiDoc,
     app,
