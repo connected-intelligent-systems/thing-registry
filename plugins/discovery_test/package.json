@@ -1,0 +1,11 @@
+{
+    "name": "discovery-test",
+    "version": "0.0.1",
+    "description": "Test plugin for discovery",
+    "main": "index.js",
+    "author": "Sebastian Alberternst <sebastian.alberternst@dfki.de>",
+    "license": "MIT",
+    "previewImage": "https://www.dfki.de/fileadmin/user_upload/DFKI/Medien/Logos/Logos_DFKI/DFKI_Logo.png",
+    "dependencies": {
+    }
+}
