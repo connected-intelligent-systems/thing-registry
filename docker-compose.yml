@@ -30,6 +30,14 @@ services:
     environment:
       POSTGRES_PASSWORD: example
 
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - 8899:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: test@test.default
+      PGADMIN_DEFAULT_PASSWORD: test
+
   redis:
     image: redis
 

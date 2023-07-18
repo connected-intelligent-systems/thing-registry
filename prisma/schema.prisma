@@ -38,7 +38,7 @@ model Affordance {
   owner                    String
   source                   String?
   thingId                  String
-  Thing                    Thing                     @relation(fields: [thingId], references: [id])
+  Thing                    Thing                     @relation(fields: [thingId], references: [id], onDelete: Cascade)
   AffordanceAuthorizations AffordanceAuthorization[]
 }
 
@@ -51,7 +51,7 @@ model ThingAuthorization {
   thingId  String
   entityId String
   scope    ThingAuthorizationScope @default(read)
-  Thing    Thing                   @relation(fields: [thingId], references: [id])
+  Thing    Thing                   @relation(fields: [thingId], references: [id], onDelete: Cascade)
 
   @@unique([thingId, entityId])
 }
@@ -65,7 +65,7 @@ model AffordanceAuthorization {
   affordanceId String
   entityId     String
   scope        AffordanceAuthorizationScope @default(execute)
-  Affordance   Affordance                   @relation(fields: [affordanceId], references: [id])
+  Affordance   Affordance                   @relation(fields: [affordanceId], references: [id], onDelete: Cascade)
 }
 
 model Target {
@@ -75,7 +75,7 @@ model Target {
   index       Int
   description Json
   owner       String
-  Thing       Thing          @relation(fields: [thingId], references: [id])
+  Thing       Thing          @relation(fields: [thingId], references: [id], onDelete: Cascade)
   source      String?
 
   @@id([thingId, type, name, index])
