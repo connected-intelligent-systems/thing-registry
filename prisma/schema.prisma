@@ -100,4 +100,6 @@ model PluginSetting {
   name     String
   owner    String
   settings Json
+
+  @@unique([name, owner])
 }

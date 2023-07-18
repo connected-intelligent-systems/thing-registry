@@ -12,6 +12,11 @@ Authorization: Bearer {{token}}
 
 ###
 
+GET http://localhost:8080/registry/plugins/discovery-test
+Authorization: Bearer {{token}}
+
+###
+
 POST http://localhost:8080/registry/validate
 Authorization: Bearer {{token}}
 Content-Type: application/json
@@ -83,5 +88,20 @@ Authorization: Bearer {{token}}
 
 ###
 
+PUT  http://localhost:8080/registry/plugins/discovery-test/settings
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ 
+    "things": 10
+}
+###
+
 GET  http://localhost:8080/registry/discovery/things/uri:urn:81e0f082-0658-4a21-a841-113deb7b4fac
 Authorization: Bearer {{token}}
+
+###
+
+PUT http://localhost:8080/registry/discovery/import
+Authorization: Bearer {{token}}
+Content-Type: application/json
