@@ -96,15 +96,15 @@ function installExposedRoutes (app, basePaths) {
       async (req, res, next) => {
         if (req.auth) {
           const tokenScopes = req.auth.access_token.content.scope.split(' ')
-          if (tokenScopes.includes('registry.thing.execute')) {
-            try {
-              await req.services.forward(req, res, next)
-            } catch (e) {
-              next(e)
-            }
-          } else {
-            next(new InvalidOrMissingScope())
+          // if (tokenScopes.includes('registry.thing.execute')) {
+          try {
+            await req.services.forward(req, res, next)
+          } catch (e) {
+            next(e)
           }
+          // } else {
+          //   next(new InvalidOrMissingScope())
+          // }
         } else {
           next(new InvalidOrMissingToken())
         }

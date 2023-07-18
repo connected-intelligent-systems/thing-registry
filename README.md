@@ -10,3 +10,4 @@ Sebastian Alberternst <sebastian.alberternst@dfki.de>
 
 MIT 
 
+## Updated Plugin Interface
