@@ -158,12 +158,19 @@ Content-Type: application/json
 
 
 ###
-GET http://localhost:8080/registry/affordances
+GET http://localhost:8080/registry/affordances?resolve=true&resolveThing=true&affordanceType=property
 Authorization: Bearer {{token_user_2}}
 Content-Type: application/json
 
 ###
 POST http://localhost:8080/registry/things
+Authorization: Bearer {{token_user_2}}
+Content-Type: application/json
+
+< ./td_2.jsonld
+
+###
+PUT http://localhost:8080/registry/things/urn:dev:ops:32473-WoTLamp-1234321
 Authorization: Bearer {{token_user_2}}
 Content-Type: application/json
 

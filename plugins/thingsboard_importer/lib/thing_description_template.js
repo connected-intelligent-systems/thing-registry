@@ -79,9 +79,6 @@ function generateActions (device) {
   )
 }
 
-const thingPropertyTemplate = `"status.test": 
-`
-
 exports = module.exports = {
   generateThingDescription
 }

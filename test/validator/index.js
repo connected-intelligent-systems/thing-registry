@@ -1,3 +1,5 @@
+/* eslint-env mocha */
+
 const assert = require('assert')
 const tdValid1 = require('../data/td_valid_1.json')
 const tdInvalid1 = require('../data/td_invalid_1.json')
