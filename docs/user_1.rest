@@ -45,7 +45,7 @@ Authorization: Bearer {{token_user_1}}
 
 ###
 
-GET http://localhost:8080/registry/affordances
+GET http://localhost:8080/registry/things
 Authorization: Bearer {{token_user_1}}
 
 ###

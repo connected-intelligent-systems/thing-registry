@@ -10,9 +10,9 @@
     "lint": "prettier --write '**/*.js' && standard --fix '**/*.js'",
     "depcheck": "depcheck",
     "test": "mocha --exit --recursive",
-    "test:docker": "docker-compose -f docker-compose.test.yml run --rm mocha",
+    "test:docker": "docker compose -f docker-compose.test.yml run --rm mocha",
     "coverage": "nyc npm run test",
-    "coverage:docker": "docker-compose -f docker-compose.test.yml run --rm coverage"
+    "coverage:docker": "docker compose -f docker-compose.test.yml run --rm coverage"
   },
   "author": "Sebastian Alberternst <sebastian.alberternst@dfki.de>",
   "license": "UNLICENSED",
@@ -30,8 +30,10 @@
     "ajv": "^6.10.2",
     "ajv-formats-draft2019": "^1.4.3",
     "chai-as-promised": "^7.1.1",
+    "chai-http": "^4.4.0",
     "cors": "^2.8.5",
     "cross-env": "^5.2.0",
+    "discovery-test": "file:plugins/discovery_test",
     "dnssd": "^0.4.1",
     "env-var": "^7.0.0",
     "express": "^4.18.2",
@@ -47,9 +49,8 @@
     "lodash": "^4.17.20",
     "query-string": "^6.13.8",
     "rdf-store": "file:plugins/rdf_store",
-    "discovery-test": "file:plugins/discovery_test",
-    "thingsboard-importer": "file:plugins/thingsboard_importer",
     "string-to-stream": "^3.0.1",
+    "thingsboard-importer": "file:plugins/thingsboard_importer",
     "uuid": "^3.4.0",
     "vault-storage": "file:plugins/vault_storage"
   }

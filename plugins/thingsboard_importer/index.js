@@ -1,7 +1,5 @@
 'use strict'
 
-const Mustache = require('mustache')
-
 const {
   generateThingDescription
 } = require('./lib/thing_description_template')

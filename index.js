@@ -106,7 +106,6 @@ async function handleExposedWebsockets (app, req, socket, head) {
  */
 function installErrorHandler (app) {
   app.use((error, req, res, next) => {
-    console.log(error)
     // catch our own error instances
     if (error instanceof HttpError) {
       return res.status(error.status).json({
@@ -135,7 +134,6 @@ function installErrorHandler (app) {
  * Entry point fuunction that initializes and runs the server
  */
 async function initServer () {
-  const app = initExpress()
   const apiDoc = generateApiDoc()
 
   await loadPlugins()
@@ -149,6 +147,7 @@ async function initServer () {
     consumesMiddleware: {
       'application/json': express.json()
     },
+    
     securityHandlers: {
       auth: (req, scopes) => {
         return true
@@ -183,6 +182,7 @@ async function initServer () {
   return server
 }
 
+const app = initExpress()
 const promise = initServer()
   .then(server => {
     const port = server.address().port
@@ -199,6 +199,4 @@ async function getPort () {
   return promise
 }
 
-exports = module.exports = {
-  getPort
-}
+exports = module.exports = app
