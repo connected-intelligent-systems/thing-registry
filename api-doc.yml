@@ -182,178 +182,6 @@ paths:
       security:
         - auth:
           - registry.thing.delete
-  /things/{id}/credentials:
-    put:
-      description: Updates the credentials of thing. Only the owner can update credentials.
-      parameters:
-        - name: id
-          in: path
-          description: ID of the thing description
-          example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Credentials'
-      responses:
-        '200':
-          description: Successful operation
-      security:
-        - auth:
-          - registry.thing.credentials 
-    get:
-      description: Return the credentials of thing. Only the owner can return credentials.
-      parameters:
-        - name: id
-          in: path
-          description: ID of the thing description
-          example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: object
-      security:
-        - auth:
-          - registry.thing.credentials
-  /things/{id}/access:
-    get:
-      description: Return information about the permissions and access right of the thing
-      parameters:
-        - name: id
-          in: path
-          description: ID of the thing description
-          example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Access"
-      security:
-        - auth:
-          - registry.thing.read
-  /things/{id}/targets:
-    get:
-      description: Return information about the targets of a thing
-      parameters:
-        - name: id
-          in: path
-          description: ID of the thing description
-          example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Targets"
-      security:
-        - auth:
-          - registry.targets.read
-  /things/{id}/affordances/{type}/{name}/{index}/target:
-    get:
-      description: Return information about the targets of a thing
-      parameters:
-        - name: id
-          in: path
-          description: ID of the thing description
-          example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
-          required: true
-          schema:
-            type: string
-        - name: type
-          in: path
-          description: type of the affordance
-          example: properties
-          required: true
-          schema:
-            type: string
-            enum: [properties, actions, events]
-        - name: name
-          in: path
-          description: name of the affordance
-          example: sensore_42-value
-          required: true
-          schema:
-            type: string
-        - name: index
-          in: path
-          description: index of the form
-          example: 1
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Target"
-      security:
-        - auth:
-          - registry.targets.read
-    put:
-      description: Update a target of a thing
-      parameters:
-        - name: id
-          in: path
-          description: ID of the thing description
-          example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
-          required: true
-          schema:
-            type: string
-        - name: type
-          in: path
-          description: type of the affordance
-          example: properties
-          required: true
-          schema:
-            type: string
-            enum: [properties, actions, events]
-        - name: name
-          in: path
-          description: name of the affordance
-          example: sensor_42-value
-          required: true
-          schema:
-            type: string
-        - name: index
-          in: path
-          description: index of the form
-          example: 0
-          required: true
-          schema:
-            type: integer
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UpdateTarget"
-      responses:
-        '200':
-          description: Successful operation
-      security:
-        - auth:
-          - registry.targets.update
   /affordances:
     get:
       description: Lists affordances
@@ -477,62 +305,6 @@ paths:
       security:
         - auth:
           - registry.thing.validate
-  /tickets:
-     get:
-      description: Return all tickets of the affordance of a specific user
-      parameters:
-        - name: thingId
-          in: query
-          description: Filter by thing id
-          example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
-          schema:
-            type: string
-        - name: requester
-          in: query
-          description: Filter by requester
-          example: household1235@foresight-plattform.de
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Tickets"
-      security:
-        - auth:
-          - registry.tickets.read
-     post:
-      description: Create a new ticket for a resource
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateTicket"
-      responses:
-        '201':
-          description: Successful operation
-      security:
-        - auth:
-          - registry.tickets.create
-  /tickets/{id}:
-     delete:
-      description: Return all tickets of the affordance of a specific user
-      parameters:
-        - name: id
-          in: path
-          description: ID of the ticket
-          example: fdf488a8-2b27-4353-92a4-05f697e720cc
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Successful operation
-      security:
-        - auth:
-          - registry.tickets.delete
   /version:
     get:
       description: Returns the version of the registry
@@ -681,6 +453,24 @@ paths:
       security:
         - auth:
           - registry.plugin.discover
+  /permissions:
+    post:
+      description: Creates a new thing description
+      requestBody:
+        description: Thing description added
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+      responses:
+        '201':
+          description: Successful operation
+        '400':
+          description: Invalid description
+      security:
+        - auth:
+          - registry.thing.create
 components:
   schemas:
     ServerVersion:

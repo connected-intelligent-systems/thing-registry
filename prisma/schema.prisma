@@ -11,17 +11,17 @@ datasource db {
 }
 
 model Thing {
-  id                  String               @id
-  createdAt           DateTime             @default(now())
-  updatedAt           DateTime             @updatedAt
-  title               String
-  description         Json
-  owner               String
-  source              String?
-  types               String[]
-  ThingAuthorizations ThingAuthorization[]
-  Affordances         Affordance[]
-  Targets             Target[]
+  id          String       @id
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  title       String
+  description Json
+  owner       String
+  source      String?
+  types       String[]
+  Permissions Permission[]
+  Affordances Affordance[]
+  Targets     Target[]
 }
 
 enum AffordanceType {
@@ -31,42 +31,38 @@ enum AffordanceType {
 }
 
 model Affordance {
-  id                       String                    @id
-  type                     AffordanceType
-  description              Json
-  name                     String
-  types                    String[]
-  owner                    String
-  source                   String?
-  thingId                  String
-  Thing                    Thing                     @relation(fields: [thingId], references: [id], onDelete: Cascade)
-  AffordanceAuthorizations AffordanceAuthorization[]
+  id          String         @id
+  type        AffordanceType
+  description Json
+  name        String
+  types       String[]
+  owner       String
+  source      String?
+  thingId     String
+  Thing       Thing          @relation(fields: [thingId], references: [id], onDelete: Cascade)
 }
 
-enum ThingAuthorizationScope {
+enum PermissionScope {
   read
+  readProperties
+  invokeActions
+  subscribeEvents
 }
 
-model ThingAuthorization {
-  id       Int                     @id @default(autoincrement())
-  thingId  String
-  entityId String
-  scope    ThingAuthorizationScope @default(read)
-  Thing    Thing                   @relation(fields: [thingId], references: [id], onDelete: Cascade)
+enum EntityType {
+  group
+  user
+}
+
+model Permission {
+  id         Int             @id @default(autoincrement())
+  thingId    String
+  entityId   String
+  entityType EntityType
+  scope      PermissionScope @default(read)
+  Thing      Thing           @relation(fields: [thingId], references: [id], onDelete: Cascade)
 
   @@unique([thingId, entityId])
-}
-
-enum AffordanceAuthorizationScope {
-  execute
-}
-
-model AffordanceAuthorization {
-  id           Int                          @id @default(autoincrement())
-  affordanceId String
-  entityId     String
-  scope        AffordanceAuthorizationScope @default(execute)
-  Affordance   Affordance                   @relation(fields: [affordanceId], references: [id], onDelete: Cascade)
 }
 
 model Target {
@@ -88,11 +84,6 @@ model DiscoveredThing {
   description Json
   source      String
   owner       String
-}
-
-model Discovery {
-  user    String  @id
-  running Boolean @default(false)
 }
 
 model PluginSetting {

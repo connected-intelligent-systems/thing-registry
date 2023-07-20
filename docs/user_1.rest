@@ -50,7 +50,35 @@ Authorization: Bearer {{token_user_1}}
 
 ###
 
-GET http://localhost:8080/registry/things/urn:dev:ops:32473-WoTLamp-1234/access
+GET http://localhost:8080/registry/permissions
+Authorization: Bearer {{token_user_1}}
+
+###
+
+POST http://localhost:8080/registry/permissions
+Authorization: Bearer {{token_user_1}}
+Content-Type: application/json
+
+{
+    "entityId": "user-id",
+    "entityType": "user",
+    "thingId": "urn:uuid:69b5c7e0-25a0-11ee-bce9-cdea4e459ffb",
+    "scope": "readProperties"
+}
+
+###
+
+GET http://localhost:8080/registry/permissions/4
+Authorization: Bearer {{token_user_1}}
+
+###
+
+DELETE http://localhost:8080/registry/permissions/4
+Authorization: Bearer {{token_user_1}}
+
+###
+
+GET http://localhost:8080/registry/things
 Authorization: Bearer {{token_user_1}}
 
 ###
@@ -61,7 +89,7 @@ Authorization: Bearer {{token_user_1}}
 
 ###
 
-GET http://localhost:8080/registry/query?jsonpath=$.title
+GET http://localhost:8080/registry/query?jsonpath=$.properties.*
 Authorization: Bearer {{token_user_1}}
 
 
@@ -74,6 +102,16 @@ Authorization: Bearer {{token_user_1}}
 
 PUT http://localhost:8080/registry/discovery/run
 Authorization: Bearer {{token_user_1}}
+
+###
+
+PUT http://localhost:8080/registry/discovery/import
+Authorization: Bearer {{token_user_1}}
+Content-Type: application/json
+
+[
+
+]
 
 ###
 

@@ -1,7 +1,7 @@
 "use strict";
 
-const env = require('env-var')
-const axios = require("axios")
+const env = require("env-var");
+const axios = require("axios");
 
 const ThingsBoardUrl = env
   .get("THINGBOARD_API_URL")
@@ -12,9 +12,9 @@ const accessToken =
 
 async function getDevices({ page = 0, pageSize = 20 } = {}) {
   let devices = [];
-  let hasNext = true
-  
-  while(hasNext) {
+  let hasNext = true;
+
+  while (hasNext) {
     const result = await axios.get(
       `${ThingsBoardUrl}/api/tenant/devices?page=${page}&pageSize=${pageSize}`,
       {
@@ -22,13 +22,12 @@ async function getDevices({ page = 0, pageSize = 20 } = {}) {
           Authorization: `Bearer ${accessToken}`
         }
       }
-    ); 
-
+    );
 
     devices = devices.concat(result.data.data);
-    hasNext = result.data.hasNext
-    page++
-  } 
+    hasNext = result.data.hasNext;
+    page++;
+  }
 
   return devices;
 }
@@ -43,7 +42,7 @@ async function getAttributes(deviceId) {
       }
     }
   );
-  return response.data
+  return response.data;
 }
 
 async function getAttributes(deviceId) {
@@ -55,7 +54,7 @@ async function getAttributes(deviceId) {
       }
     }
   );
-  return response.data
+  return response.data;
 }
 
 async function getTimeseries(deviceId) {
@@ -67,15 +66,15 @@ async function getTimeseries(deviceId) {
       }
     }
   );
-  return response.data
+  return response.data;
 }
 
 // todo: implement
 async function authenticate(accessToken) {
   const result = await axios.post(`${ThingsBoardUrl}/api/auth/login`, {
-    user: 'oauth2',
+    user: "oauth2",
     password: accessToken
-  })
+  });
 }
 
 exports = module.exports = {

@@ -5,7 +5,11 @@ const Mustache = require('mustache')
 const {
   generateThingDescription
 } = require('./lib/thing_description_template')
-const { getDevices, getAttributes, getTimeseries } = require('./lib/thingsboard_api')
+const {
+  getDevices,
+  getAttributes,
+  getTimeseries
+} = require('./lib/thingsboard_api')
 
 async function generateThingDescriptions () {
   const devices = await getDevices()
@@ -24,13 +28,12 @@ async function generateThingDescriptions () {
 async function init ({ PluginTypes }) {
   return {
     type: PluginTypes.Discovery,
-    schema: {
-    }
+    schema: {}
   }
 }
 
 async function discover (settings) {
-  return await generateThingDescriptions()
+  return generateThingDescriptions()
 }
 
 async function authenticate (target, { credentialsStorage, readSettings }) {
