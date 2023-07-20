@@ -1,0 +1,14 @@
+{
+    "name": "thingsboard-importer",
+    "version": "0.0.1",
+    "description": "Generate thing descriptions from thingsboard devices",
+    "main": "index.js",
+    "author": "Sebastian Alberternst <sebastian.alberternst@dfki.de>",
+    "license": "MIT",
+    "previewImage": "https://www.dfki.de/fileadmin/user_upload/DFKI/Medien/Logos/Logos_DFKI/DFKI_Logo.png",
+    "dependencies": {
+        "axios": "^1.4.0",
+        "env-var": "^7.3.1",
+        "mustache": "^4.2.0"
+    }
+}

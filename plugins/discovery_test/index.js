@@ -1,14 +1,14 @@
 'use strict'
 
-async function init({ PluginTypes }) {
+async function init ({ PluginTypes }) {
   return {
     type: PluginTypes.Discovery,
     schema: {
-      type: "object",
+      type: 'object',
       additionalProperties: false,
       properties: {
         things: {
-          type: "integer"
+          type: 'integer'
         }
       },
       required: ['things']
@@ -16,7 +16,7 @@ async function init({ PluginTypes }) {
   }
 }
 
-async function discover(settings) {
+async function discover (settings) {
   return [
     {
       '@context': 'https://www.w3.org/2019/wot/td/v1',
@@ -51,7 +51,7 @@ async function discover(settings) {
   ]
 }
 
-async function authenticate(target, { credentialsStorage, readSettings }) {
+async function authenticate (target, { credentialsStorage, readSettings }) {
   return {
     headers: {},
     queries: {}

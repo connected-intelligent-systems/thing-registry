@@ -48,6 +48,7 @@
     "query-string": "^6.13.8",
     "rdf-store": "file:plugins/rdf_store",
     "discovery-test": "file:plugins/discovery_test",
+    "thingsboard-importer": "file:plugins/thingsboard_importer",
     "string-to-stream": "^3.0.1",
     "uuid": "^3.4.0",
     "vault-storage": "file:plugins/vault_storage"

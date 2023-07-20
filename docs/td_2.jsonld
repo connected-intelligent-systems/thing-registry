@@ -1,0 +1,15 @@
+{
+    "@context": "https://www.w3.org/2019/wot/td/v1",
+    "id": "urn:dev:ops:32473-WoTLamp-1234321",
+    "title": "My Lampg Thing 2",
+    "securityDefinitions": {
+        "basic_sc": {"scheme": "basic", "in":"header"}
+    },
+    "security": ["basic_sc"],
+    "properties": {
+        "status321" : {
+            "type": "string",
+            "forms": [{"href": "https://mylamp.example.com/status"}]
+        }
+    }
+}
