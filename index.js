@@ -106,7 +106,7 @@ async function handleExposedWebsockets (app, req, socket, head) {
  */
 function installErrorHandler (app) {
   app.use((error, req, res, next) => {
-    console.log(error)
+    // console.log(error)
     // catch our own error instances
     if (error instanceof HttpError) {
       return res.status(error.status).json({
