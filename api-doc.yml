@@ -454,23 +454,55 @@ paths:
         - auth:
           - registry.plugin.discover
   /permissions:
+    get:
+      description: Get all permissions of the current user
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Permissions"
+      security:
+        - auth:
+          - registry.permissions.read 
     post:
-      description: Creates a new thing description
+      description: Creates a new permission
       requestBody:
-        description: Thing description added
         required: true
         content:
           application/json:
             schema:
-              type: "object"
+              $ref:  "#/components/schemas/Permission"
       responses:
         '201':
           description: Successful operation
-        '400':
-          description: Invalid description
+        '401':
+          description: Insufficient permissions
       security:
         - auth:
-          - registry.thing.create
+          - registry.permission.create
+  /permissions/{id}:
+    get:
+      description: Get a permission
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Permission"
+      security:
+        - auth:
+          - registry.permissions.read 
+    delete:
+      description: Delete a permission
+      responses:
+        '200':
+          description: Successful operation
+      security:
+        - auth:
+          - registry.permissions.delete 
 components:
   schemas:
     ServerVersion:
@@ -626,57 +658,6 @@ components:
         - types
         - owner
         - href
-    Credentials:
-      type: array
-      additionalProperties: false
-      items:
-        oneOf:
-          - $ref: '#/components/schemas/BasicCredentials'
-          - $ref: '#/components/schemas/BearerCredentials'
-          - $ref: '#/components/schemas/ApiKeyCredentials'
-    BasicCredentials: 
-      type: object
-      required:
-        - security
-        - username
-        - password
-      additionalProperties: false
-      properties: 
-        security: 
-          type: string
-          description: Name of the security definition in the thing description
-          example: basic_sc
-        username: 
-          type: string
-          description: Username of the basic authentication
-        password:
-          type: string
-          description: Password of the basic authentication
-    BearerCredentials: 
-      type: object
-      required:
-        - security
-        - token
-      additionalProperties: false
-      properties: 
-        security: 
-          type: string
-          description: Name of the security definition in the thing description
-          example: bearer_sc
-        token: 
-          type: string
-          description: The bearer token to use
-    ApiKeyCredentials:
-      type: object
-      additionalProperties: false
-      properties:
-        security: 
-          type: string
-          description: Name of the security definition in the thing description
-          example: api_sc
-        apiKey:
-          type: string
-          description: The api key to use
     DiscoveredThing:
       type: object
       properties:
@@ -739,125 +720,35 @@ components:
         - type: boolean
         - type: array
         - type: object
-    Access:
-      type: object
-      properties:
-        owner:
-          type: boolean
-          description: True if the requester is the owner of the resource
-        permissions:
-          type: array
-          items:
-            $ref: "#/components/schemas/Permission"
-      required: 
-        - owner
     Permission:
       type: object
       properties:
-        name:
-          type: string
-          description: name of the resources
-        scopes: 
-          $ref: "#/components/schemas/Scopes"
-      required: 
-        - name
-    Scope:
-      type: string
-      example: GET
-      description: a scope for a resources
-    Scopes:
-      type: array
-      description: list of scopes
-      example:
-        [ "GET", "PUT" ]
-      items:
-        $ref: "#/components/schemas/Scope"
-    Target:
-      type: object
-      properties:
-        href: 
-          type: string
-          format: uri
-          description: link to the target to update the authorization
-        authorized:
-          type: boolean
-          description: authorized targets can be called via the exposed thing api
-        security:
-          type: array
-          description: list of security mechanisms for the target
-          items:
-            type: string
-    Targets:
-      type: array
-      items:
-        $ref: "#/components/schemas/Target"
-    UpdateTarget:
-      type: object
-      properties:
-        authorized: 
-          type: boolean
-          description: Sets if the target is authorized and can be used via the exposed thing interface
-    CreateTicket:
-      type: object
-      properties:
-        resource:
-          type: string
-          description: The name of the resource
-          example: uri:urn:c5a6792a-2d7d-4be3-a6b6-9d1f21cf0490
-        requester: 
-          type: string
-          description: The name of the requester who wants access to the resource
-          example: household12345@foresight-plattform.de
-        scope: 
-          $ref: "#/components/schemas/Scope" 
-      required:
-        - requester
-        - scope
-        - resource
-    Ticket:
-      type: object
-      properties:
         id:
+          type: integer
+          description: id of the permission
+        entityId:
           type: string
-          description: Id of the ticket
-          example: d4fdbdd9-a586-4dfc-8858-0cdda8c8d463
-        granted:
-          type: boolean
-          description: Is access granted
-        resource:
+          description: id of the entity (user or group ip)
+        entityType:
           type: string
-          description: ID of the resource
-          example: 5dd2fdfa-b406-418f-85ae-70f2b3409738
-        resourceName:
+          description: type of the entity 
+          enum: [group, user]
+        scope: 
           type: string
-          description: Name of the resource
-          example: uri:urn:bcb8182e-bdb2-4921-a11c-ec5fd58df524
-        requester:
+          description: scope of the permission
+          enum: [read,readProperty,invokeAction,subscribeEvent]
+        thingId:
           type: string
-          description: Id of the requester
-          example: bcb8182e-bdb2-4921-a11c-ec5fd58df524
-        requesterName:
-          type: string
-          description: Name of the requester
-          example: household1235@foresight-plattform.de
-        owner:
-          type: string
-          description: Id of the owner
-          example: 64ea59bc-24a9-4008-af35-b7bfc816f313
-        ownerName:
-          type: string
-          description: Name of the requester
-          example: household2341@foresight-plattform.de
-        scope:
-          type: string
-          description: Id of the scope
-          example: 71f41525-7d0c-4bf6-b4e5-0cd282dc6c11
-        scopeName:
-          $ref: "#/components/schemas/Scope" 
-    Tickets:
+          description: thing id of the thing for this permission
+      required: 
+        - entityId
+        - entityType
+        - scope
+        - thingId
+    Permissions:
       type: array
       items:
-        $ref: "#/components/schemas/Ticket" 
+        $ref: "#/components/schemas/Permission"
     Error:
       type: object
       properties:
@@ -915,10 +806,6 @@ components:
             registry.plugin.read: read plugins
             registry.plugin.write: write plugins settings
             registry.plugin.discover: use plugins to discover new things
-            registry.thing.credentials: read and write thing credentials
-            registry.thing.execute: execute forms of a thing
-            registry.targets.read: read targets
-            registry.targets.update: update targets
-            registry.tickets.create: create tickets
-            registry.tickets.update: update tickets
-            registry.tickets.delete: delete tickets 
+            registry.permission.create: create permissions
+            registry.permission.read: read permissions
+            registry.permission.delete: delete permission

@@ -122,4 +122,34 @@ describe('API', () => {
       })
     })
   })
+
+  describe('Create', () => {
+    before(async () => {
+      await prisma.thing.deleteMany({})
+      await prisma.permission.deleteMany({})
+      await queries.createThing({
+        owner: '5ccc7bff-7e60-4604-ac1e-c1b7b0b5951d',
+        description: tdValid1,
+        enableProxy: false
+      })
+    })
+
+    it('create', done => {
+      chai
+        .request(app)
+        .post('/registry/permissions')
+        .set('authorization', `Bearer ${accessTokenUser1}`)
+        .set('content-type', 'application/json')
+        .send({
+          entityId: 'unique-user-id',
+          entityType: 'user',
+          scope: 'read',
+          thingId: 'urn:dev:ops:32473-WoTLamp-1234'
+        })
+        .end((_, res) => {
+          res.should.have.status(201)
+          done()
+        })
+    })
+  })
 })
