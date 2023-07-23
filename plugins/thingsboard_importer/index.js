@@ -6,22 +6,20 @@ const {
 const {
   getDevices,
   getAttributes,
-  getTimeseries
+  getTimeseries,
+  authenticateThingsboard
 } = require('./lib/thingsboard_api')
 
-async function generateThingDescriptions () {
-  const devices = await getDevices()
+async function generateThingDescriptions (accessToken) {
+  const devices = await getDevices({ accessToken })
   const thingDescriptions = []
   for (const device of devices) {
-    device.attributes = await getAttributes(device.id.id)
-    device.timeseries = await getTimeseries(device.id.id)
+    device.attributes = await getAttributes({ accessToken, deviceId: device.id.id })
+    device.timeseries = await getTimeseries({ accessToken, deviceId: device.id.id })
     thingDescriptions.push(generateThingDescription(device))
   }
   return thingDescriptions
 }
-
-// generateThingDescriptions().then(ls => console.log(JSON.stringify(ls, null, 4)))
-// .then(devices => console.log(devices))
 
 async function init ({ PluginTypes }) {
   return {
@@ -30,7 +28,9 @@ async function init ({ PluginTypes }) {
   }
 }
 
-async function discover (settings) {
+async function discover (settings, { accessToken }) {
+  const response = await authenticateThingsboard(accessToken.token)
+  console.log(response)
   return generateThingDescriptions()
 }
 
