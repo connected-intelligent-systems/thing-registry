@@ -401,7 +401,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreatePermission"
+              $ref: "#/components/schemas/Permission"
       responses:
         '201':
           description: Successful operation
@@ -843,97 +843,54 @@ components:
         - type: object
     Scope:
       type: string
-      example: GET
+      example: read
       description: a scope for a resources
     Scopes:
       type: array
       description: list of scopes
       example:
-        [ "GET", "PUT" ]
+        [ "read", "update" ]
       items:
         $ref: "#/components/schemas/Scope"
-    Target:
-      type: object
-      properties:
-        href: 
-          type: string
-          format: uri
-          description: link to the target to update the authorization
-        authorized:
-          type: boolean
-          description: authorized targets can be called via the exposed thing api
-        security:
-          type: array
-          description: list of security mechanisms for the target
-          items:
-            type: string
-    Targets:
-      type: array
-      items:
-        $ref: "#/components/schemas/Target"
-    UpdateTarget:
-      type: object
-      properties:
-        authorized: 
-          type: boolean
-          description: Sets if the target is authorized and can be used via the exposed thing interface
-    CreatePermission:
-      type: object
-      properties:
-        resource:
-          type: string
-          description: The name of the resource
-          example: uri:urn:c5a6792a-2d7d-4be3-a6b6-9d1f21cf0490
-        requester: 
-          type: string
-          description: The name of the requester who wants access to the resource
-          example: household12345@foresight-plattform.de
-        scope: 
-          $ref: "#/components/schemas/Scope" 
-      required:
-        - requester
-        - scope
-        - resource
     Permission:
       type: object
+      additionalProperties: false
       properties:
         id:
           type: string
           description: Id of the permission
           example: d4fdbdd9-a586-4dfc-8858-0cdda8c8d463
-        granted:
-          type: boolean
-          description: Is access granted
-        resource:
+        thingId:
           type: string
-          description: ID of the resource
-          example: 5dd2fdfa-b406-418f-85ae-70f2b3409738
-        resourceName:
+          description: Target thing of the permission
+          example: uri:urn:thing-id
+        entityName:
           type: string
+          description: Clear name of the entity e.g. email or groupname
+          example: test@example.com
+        scopes:
+          type: array
           description: Name of the resource
-          example: uri:urn:bcb8182e-bdb2-4921-a11c-ec5fd58df524
-        requester:
-          type: string
-          description: Id of the requester
-          example: bcb8182e-bdb2-4921-a11c-ec5fd58df524
-        requesterName:
-          type: string
-          description: Name of the requester
-          example: household1235@foresight-plattform.de
-        owner:
-          type: string
-          description: Id of the owner
-          example: 64ea59bc-24a9-4008-af35-b7bfc816f313
-        ownerName:
-          type: string
-          description: Name of the requester
-          example: household2341@foresight-plattform.de
-        scope:
-          type: string
-          description: Id of the scope
-          example: 71f41525-7d0c-4bf6-b4e5-0cd282dc6c11
-        scopeName:
-          $ref: "#/components/schemas/Scope" 
+          items: 
+            $ref: "#/components/schemas/Scope" 
+          example: 
+            [ "invoke", "read" ]
+        properties:
+          type: array
+          items:
+            type: string
+        actions:
+          type: array
+          items:
+            type: string
+        events:
+          type: array
+          items:
+            type: string
+      required:
+        - thingId
+        - entityName
+        - scopes
     Permissions:
       type: array
       items:
