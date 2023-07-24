@@ -477,9 +477,9 @@ paths:
       security:
         - auth:
           - registry.thing.validate
-  /tickets:
+  /permissions:
      get:
-      description: Return all tickets of the affordance of a specific user
+      description: Return all permissions of the affordance of a specific user
       parameters:
         - name: thingId
           in: query
@@ -499,30 +499,30 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Tickets"
+                $ref: "#/components/schemas/Permissions"
       security:
         - auth:
           - registry.tickets.read
      post:
-      description: Create a new ticket for a resource
+      description: Create a new permission for a resource
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateTicket"
+              $ref: "#/components/schemas/CreatePermission"
       responses:
         '201':
           description: Successful operation
       security:
         - auth:
           - registry.tickets.create
-  /tickets/{id}:
+  /permissions/{id}:
      delete:
-      description: Return all tickets of the affordance of a specific user
+      description: Return all permissions of the affordance of a specific user
       parameters:
         - name: id
           in: path
-          description: ID of the ticket
+          description: ID of the permission
           example: fdf488a8-2b27-4353-92a4-05f697e720cc
           required: true
           schema:
@@ -958,10 +958,10 @@ components:
         permissions:
           type: array
           items:
-            $ref: "#/components/schemas/Permission"
+            $ref: "#/components/schemas/PermissionOld"
       required: 
         - owner
-    Permission:
+    PermissionOld:
       type: object
       properties:
         name:
@@ -1007,7 +1007,7 @@ components:
         authorized: 
           type: boolean
           description: Sets if the target is authorized and can be used via the exposed thing interface
-    CreateTicket:
+    CreatePermission:
       type: object
       properties:
         resource:
@@ -1024,12 +1024,12 @@ components:
         - requester
         - scope
         - resource
-    Ticket:
+    Permission:
       type: object
       properties:
         id:
           type: string
-          description: Id of the ticket
+          description: Id of the permission
           example: d4fdbdd9-a586-4dfc-8858-0cdda8c8d463
         granted:
           type: boolean
@@ -1064,10 +1064,10 @@ components:
           example: 71f41525-7d0c-4bf6-b4e5-0cd282dc6c11
         scopeName:
           $ref: "#/components/schemas/Scope" 
-    Tickets:
+    Permissions:
       type: array
       items:
-        $ref: "#/components/schemas/Ticket" 
+        $ref: "#/components/schemas/Permission" 
     Error:
       type: object
       properties:
