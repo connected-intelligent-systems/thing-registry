@@ -493,7 +493,7 @@ paths:
         - auth:
           - registry.plugin.write
   /discovery/{id}/scan:
-    put:
+    post:
       description: Discover things
       parameters:
         - name: id

@@ -25,7 +25,6 @@
   "dependencies": {
     "ajv": "^6.10.2",
     "ajv-formats-draft2019": "^1.4.3",
-    "body-parser": "^1.19.0",
     "chai-as-promised": "^7.1.1",
     "cors": "^2.8.5",
     "cross-env": "^5.2.0",
@@ -35,8 +34,6 @@
     "express": "^4.18.2",
     "express-openapi": "^7.2.0",
     "forever": "^1.0.0",
-    "form-urlencoded": "^4.1.1",
-    "http-errors": "^1.7.3",
     "http-proxy-agent": "^4.0.1",
     "http-proxy-middleware": "^0.19.1",
     "https-proxy-agent": "^5.0.0",
@@ -49,11 +46,8 @@
     "lodash": "^4.17.20",
     "mongodb": "4.4",
     "mongodb-credentials": "file:plugins/mongodb_credentials",
-    "node-fetch": "^2.6.1",
-    "query-string": "^6.13.8",
     "rdf-store": "file:plugins/rdf_store",
     "redis": "^3.1.2",
-    "string-to-stream": "^3.0.1",
     "thingsboard-importer": "file:plugins/thingsboard_importer",
     "uuid": "^3.4.0",
     "vault-storage": "file:plugins/vault_storage"
