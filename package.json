@@ -54,7 +54,7 @@
     "rdf-store": "file:plugins/rdf_store",
     "redis": "^3.1.2",
     "string-to-stream": "^3.0.1",
-    "thingsboard-iporter": "file:plugins/thingsboard_importer",
+    "thingsboard-importer": "file:plugins/thingsboard_importer",
     "uuid": "^3.4.0",
     "vault-storage": "file:plugins/vault_storage"
   }
