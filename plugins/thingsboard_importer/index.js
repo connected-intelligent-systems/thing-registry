@@ -29,8 +29,7 @@ async function generateThingDescriptions (accessToken) {
 
 async function init ({ PluginTypes }) {
   return {
-    type: PluginTypes.Discovery,
-    schema: {}
+    type: PluginTypes.Discovery
   }
 }
 

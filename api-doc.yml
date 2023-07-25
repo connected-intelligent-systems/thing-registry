@@ -1,7 +1,7 @@
 openapi: "3.0.0"
 info:
   title: Thing Description Registry
-  version: 0.3.6
+  version: 0.4.0
 servers:
 - url: http://localhost:8080/registry
   description: Thing Registry
@@ -37,7 +37,7 @@ paths:
           type: array
           items:
             type: string
-            example: household1235@foresight-plattform.de
+            example: test@example.com
         required: false
         description: Filter by owner
       - in: query
@@ -295,7 +295,7 @@ paths:
             type: string
         required: false
         description: Filter by owner
-        example: household1235@foresight-plattform.de
+        example: test@example.com
       - in: query
         name: type
         schema:
@@ -382,7 +382,7 @@ paths:
         - name: requester
           in: query
           description: Filter by requester
-          example: household1235@foresight-plattform.de
+          example: test@example.com
           schema:
             type: string
       responses:
@@ -455,7 +455,7 @@ paths:
         - name: id
           in: path
           description: Name of the plugin
-          example: connctd-importer
+          example: thingsboard-importer
           required: true
           schema:
             type: string
@@ -470,13 +470,33 @@ paths:
         - auth:
           - registry.plugin.read
   /discovery/{id}/settings:
+    get:
+      description: Return a plugin description
+      parameters:
+        - name: id
+          in: path
+          description: Name of the plugin
+          example: thingsboard-importer
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PluginSettings'
+      security:
+        - auth:
+          - registry.plugin.read
     put:
       description: Update the settings of a plugin
       parameters:
         - name: id
           in: path
           description: Name of the plugin
-          example: connctd-plugin
+          example: thingsboard-importer
           required: true
           schema:
             type: string
@@ -499,7 +519,7 @@ paths:
         - name: id
           in: path
           description: Name of the plugin
-          example: connctd-plugin
+          example: thingsboard-importer
           required: true
           schema:
             type: string
@@ -516,12 +536,6 @@ paths:
         - name: resolve
           in: query
           description: True if the thing description should resolve
-          example: false
-          schema:
-            type: boolean
-        - name: showDuplicates
-          in: query
-          description: True if already known thing ids should be shown
           example: false
           schema:
             type: boolean
@@ -555,7 +569,7 @@ paths:
                 $ref: "#/components/schemas/DiscoveredThing"
       security:
         - auth:
-          - registry.plugin.discover       
+          - registry.plugin.discover
   /inbox/{thingId}/approve:
     put:
       description: Import discovered things
@@ -608,7 +622,7 @@ components:
         owner:
           type: string
           description: Owner of the affordance
-          example: household1235@foresight-plattform.de
+          example: test@example.com
         thingId:
           type: string
           description: Related ID of the thing
@@ -809,7 +823,7 @@ components:
         source:
           type: string
           description: name of the plugin that discovered the thing
-          example: connctd-import
+          example: thingsboard-importer
         description: 
           $ref: '#/components/schemas/ThingDescription'
     DiscoveredThings:
