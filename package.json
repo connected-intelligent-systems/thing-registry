@@ -47,7 +47,7 @@
     "jsonpath": "^1.0.2",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.20",
-    "mongodb": "^3.6.3",
+    "mongodb": "4.4",
     "mongodb-credentials": "file:plugins/mongodb_credentials",
     "node-fetch": "^2.6.1",
     "query-string": "^6.13.8",
