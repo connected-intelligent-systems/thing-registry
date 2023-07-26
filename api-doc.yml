@@ -251,81 +251,9 @@ paths:
       security:
         - auth:
           - registry.thing.read
-  /affordances:
-    get:
-      description: Lists affordances
-      parameters:
-      - in: query
-        name: page_size
-        schema:
-          type: integer
-          minimum: 1
-          maximum: 100
-          default: 50
-        required: false
-        example: 30
-      - in: query
-        name: page
-        schema:
-          type: integer
-          example: 1
-          minimum: 1
-          default: 1
-        required: false
-      - in: query
-        name: resolve
-        schema:
-          type: boolean
-        required: false
-        description: Resolve all affordances
-        example: false
-      - in: query
-        name: resolveThing
-        schema:
-          type: boolean
-        required: false
-        description: Resolve all thing descriptions
-        example: false
-      - in: query
-        name: thingId
-        schema:
-          type: array
-          items:
-            type: string
-        required: false
-        description: Filter by thing ids
-        example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
-      - in: query
-        name: owner
-        schema:
-          type: array
-          items:
-            type: string
-        required: false
-        description: Filter by owner
-        example: test@example.com
-      - in: query
-        name: type
-        schema:
-          type: array
-          items:
-            type: string
-        required: false
-        description: Type(s) of the thing
-        example: iot:PowerMonitoring
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Affordances"
-      security:
-        - auth:
-          - registry.thing.read
   /query:
     get:
-      description: Lists affordances
+      description: Query thing descriptions
       parameters:
       - in: query
         name: jsonpath
@@ -347,11 +275,11 @@ paths:
         description: a jsonld frame
       responses:
         '200':
-          description: Returns all registered affordances
+          description: Returns query result
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Affordances"
+                type: object
       security:
         - auth:
           - registry.thing.read
@@ -639,67 +567,6 @@ components:
           type: string
           description: The version of the registry service
           example: 0.3.5
-    Affordance:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the affordance
-          example: sensor_470-value
-        owner:
-          type: string
-          description: Owner of the affordance
-          example: test@example.com
-        thingId:
-          type: string
-          description: Related ID of the thing
-          example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
-        types:
-          type: array
-          description: Semantic types of the affordance
-          example: 
-            [
-              "PropertyAffordance",
-              "iot:TotalActivePower"
-            ]
-          items:
-            type: string
-        description:
-          type: object
-          description: Contains the affordance from the thing description if resolved
-          example: 
-            {
-              "type": "object",
-              "@type": [
-                  "PropertyAffordance",
-                  "iot:TotalActivePower"
-              ],
-              "forms": [
-                  {
-                      "op": "readproperty",
-                      "href": "https://thing-registry.apps.foresight.aareon.com/api/thing/urn:uri:6f0685ad-8a08-431a-b700-6dd1a236335b",
-                      "contentType": "application/json"
-                  }
-              ],
-              "properties": {
-                  "value": {
-                      "type": "number",
-                      "@type": "iot:ActivePowerData",
-                      "schema:dateModified": {
-                          "@id": "dateModified"
-                      }
-                  },
-                  "lastUpdate": {
-                      "@id": "dateModified",
-                      "type": "string",
-                      "@type": "schema:DateTime"
-                  }
-              }
-            }
-    Affordances:
-      type: array
-      items: 
-        $ref: "#/components/schemas/Affordance"
     CreatedThing:
       type: object
       description: Returns the created thing id
