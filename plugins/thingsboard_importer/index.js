@@ -40,8 +40,9 @@ async function discover (settings, { accessToken }) {
 
 async function authenticate (target, { credentialsStorage, readSettings }) {
   return {
-    headers: {},
-    queries: {}
+    bearer_sc: {
+      token: ''
+    }
   }
 }
 

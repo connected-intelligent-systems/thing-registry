@@ -6,9 +6,9 @@ function generateThingDescription (device) {
     id: `urn:uuid:${device.id.id}`,
     title: device.name,
     securityDefinitions: {
-      nosec_sc: { scheme: 'nosec' }
+      bearer_sc: { scheme: 'bearer' }
     },
-    security: 'nosec_sc',
+    security: 'bearer_sc',
     properties: generateProperties(device),
     actions: generateActions(device)
   }
@@ -21,6 +21,12 @@ function generateProperties (device) {
       ...a,
       [v]: {
         type: 'object',
+        uriVariables: {
+          keys: {
+            type: 'string',
+            const: v
+          }
+        },
         properties: {
           value: {
             type: 'string'
@@ -31,7 +37,7 @@ function generateProperties (device) {
         },
         forms: [
           {
-            href: 'http://localhost:8090'
+            href: `http://192-168-178-60.nip.io/api/plugins/telemetry/DEVICE/${device.id.id}/values/timeseries?keys=${v}`
           }
         ]
       }

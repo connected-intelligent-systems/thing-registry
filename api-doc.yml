@@ -11,19 +11,24 @@ paths:
       description: Returns all registered thing descriptions
       parameters:
       - in: query
-        name: limit
+        name: page_size
         schema:
           type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
         required: false
-        description: Limit the returned thing descriptions
+        description: Limit the number of returned thing descriptions by page
         example: 30
       - in: query
-        name: skip
+        name: page
         schema:
           type: integer
+          example: 1
+          minimum: 1
+          default: 1
         required: false
-        description: Skip over a specific number of thing descriptions
-        example: 1
+        description: Return the page of thing descriptions
       - in: query
         name: resolve
         schema:
@@ -251,19 +256,22 @@ paths:
       description: Lists affordances
       parameters:
       - in: query
-        name: limit
+        name: page_size
         schema:
           type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
         required: false
-        description: Limit the returned affordances 
         example: 30
       - in: query
-        name: skip
+        name: page
         schema:
           type: integer
+          example: 1
+          minimum: 1
+          default: 1
         required: false
-        description: Skip over a specific number of affordances
-        example: 0
       - in: query
         name: resolve
         schema:
@@ -373,15 +381,34 @@ paths:
      get:
       description: Return all permissions of the affordance of a specific user
       parameters:
+        - in: query
+          name: page_size
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+          required: false
+          description: Limit the number of returned permissions per page
+          example: 30
+        - in: query
+          name: page
+          schema:
+            type: integer
+            example: 1
+            minimum: 1
+            default: 1
+          required: false
+          description: Number of the page
         - name: thingId
           in: query
           description: Filter by thing id
           example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
           schema:
             type: string
-        - name: requester
+        - name: entity_name
           in: query
-          description: Filter by requester
+          description: Filter by entity_name
           example: test@example.com
           schema:
             type: string
@@ -760,7 +787,6 @@ components:
         - href
     Credentials:
       type: array
-      additionalProperties: false
       items:
         oneOf:
           - $ref: '#/components/schemas/BasicCredentials'
@@ -870,6 +896,7 @@ components:
         - type: integer
         - type: boolean
         - type: array
+          items: {}
         - type: object
     Scope:
       type: string
