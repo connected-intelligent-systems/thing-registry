@@ -610,9 +610,24 @@ components:
           }
       }
     Things:
-      type: array
-      items:
-        $ref: "#/components/schemas/Thing"
+      type: object
+      properties:
+        page:
+          type: integer
+          description: The current page number
+        pageSize:
+          type: integer
+          description: The current page size
+        totalPages:
+          type: integer
+          description: The total number of pages
+        hasNextPage:
+          type: boolean
+          description: True if there is a next page
+        things:
+          type: array
+          items:
+            $ref: "#/components/schemas/Thing"
     Thing:
       type: object
       description: A summary for a stored thing
@@ -836,9 +851,24 @@ components:
         - entityName
         - scopes
     Permissions:
-      type: array
-      items:
-        $ref: "#/components/schemas/Permission" 
+      type: object
+      properties:
+        page:
+          type: integer
+          description: The current page number
+        pageSize:
+          type: integer
+          description: The current page size
+        totalPages:
+          type: integer
+          description: The total number of pages
+        hasNextPage:
+          type: boolean
+          description: True if there is a next page
+        permissions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Permission" 
     Error:
       type: object
       properties:
