@@ -49,7 +49,7 @@
     "rdf-store": "file:plugins/rdf_store",
     "redis": "^3.1.2",
     "thingsboard-importer": "file:plugins/thingsboard_importer",
-    "uuid": "^3.4.0",
+    "uuid": "^9.0.0",
     "vault-storage": "file:plugins/vault_storage"
   }
 }

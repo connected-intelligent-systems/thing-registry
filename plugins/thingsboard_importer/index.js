@@ -33,12 +33,17 @@ async function init ({ PluginTypes }) {
   }
 }
 
-async function discover (settings, { accessToken }) {
+async function discover (settings, { accessToken, credentialsStorage }) {
   const data = await authenticateThingsboard(accessToken.token)
+  await credentialsStorage.update(data)
   return generateThingDescriptions(data.token)
 }
 
-async function authenticate (target, { credentialsStorage, readSettings }) {
+async function authenticate (
+  target,
+  { credentialsStorage, readSettings, exchangeAccessToken, accessToken }
+) {
+  const token = await exchangeAccessToken(accessToken, target.owner)
   return {
     bearer_sc: {
       token: ''

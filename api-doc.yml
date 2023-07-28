@@ -488,6 +488,25 @@ paths:
     get:
       description: Returns a list of discovered things
       parameters:
+        - in: query
+          name: page_size
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+          required: false
+          description: Limit the number of returned things by page
+          example: 30
+        - in: query
+          name: page
+          schema:
+            type: integer
+            example: 1
+            minimum: 1
+            default: 1
+          required: false
+          description: Return the page of things
         - name: resolve
           in: query
           description: True if the thing description should resolve
@@ -728,6 +747,15 @@ components:
           type: string
           description: time when the thing was discovered
           example: 2021-03-30T07:06:31.930Z
+        title: 
+          type: string
+          description: title of the discovered thing
+          example: MyThing
+        types: 
+          type: array
+          items: 
+            type: string
+          description: semantic types of the discovered thing
         source:
           type: string
           description: name of the plugin that discovered the thing
@@ -735,9 +763,24 @@ components:
         description: 
           $ref: '#/components/schemas/ThingDescription'
     DiscoveredThings:
-      type: array
-      items:
-       $ref: "#/components/schemas/DiscoveredThing" 
+      type: object
+      properties:
+        page:
+          type: integer
+          description: The current page number
+        pageSize:
+          type: integer
+          description: The current page size
+        totalPages:
+          type: integer
+          description: The total number of pages
+        hasNextPage:
+          type: boolean
+          description: True if there is a next page
+        things:
+          type: array
+          items:
+            $ref: "#/components/schemas/DiscoveredThing" 
     Plugins:
       type: array
       items:
