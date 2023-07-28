@@ -57,11 +57,11 @@ async function authenticate (
 ) {
   let token = await credentialsStorage.get()
   if (jwtIsExpired(token)) {
-    const impersonatedToken = await exchangeAccessToken(accessToken.token, target.owner)
-    token = await reauthenticate(
-      impersonatedToken,
-      credentialsStorage
+    const impersonatedToken = await exchangeAccessToken(
+      accessToken.token,
+      target.owner
     )
+    token = await reauthenticate(impersonatedToken, credentialsStorage)
   }
   return {
     bearer_sc: {
