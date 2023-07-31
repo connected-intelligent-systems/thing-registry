@@ -364,7 +364,24 @@ paths:
         - auth:
           - registry.tickets.create
   /permissions/{id}:
-     delete:
+    get:
+      description: Return a permission
+      parameters:
+        - name: id
+          in: path
+          description: ID of the thing description
+          example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Permission"
+    delete:
       description: Return all permissions of the affordance of a specific user
       parameters:
         - name: id

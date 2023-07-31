@@ -1,10 +1,22 @@
 'use strict'
 
+function getAttribute (attributes, key, name) {
+  const attribute = attributes.find(d => d.key === key)
+  console.log(attribute)
+  if (attribute) {
+    return attribute.value[name]
+  }
+}
+
 function generateThingDescription (device) {
   return {
     '@context': 'https://www.w3.org/2022/wot/td/v1.1',
     id: `urn:uuid:${device.id.id}`,
-    title: device.name,
+    title:
+      getAttribute(device.attributes, 'device', 'name_by_user') ||
+      getAttribute(device.attributes, 'device', 'name') ||
+      getAttribute(device.attributes, 'device', 'original_name') ||
+      device.name,
     securityDefinitions: {
       bearer_sc: { scheme: 'bearer' }
     },
