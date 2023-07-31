@@ -363,6 +363,58 @@ paths:
       security:
         - auth:
           - registry.tickets.create
+  /permissions/eval:
+     get:
+      description: Query permissions
+      parameters:
+        - name: thing_id
+          in: query
+          description: Filter by thing id
+          example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
+          schema:
+            type: array
+            items:
+              type: string
+        - name: scope
+          in: query
+          description: Filter by scope
+          example: read
+          schema:
+            type: array
+            items:
+              type: string
+        - name: property
+          in: query
+          description: Filter by property
+          example: read
+          schema:
+            type: string
+        - name: action
+          in: query
+          description: Filter by action
+          example: read
+          schema:
+            type: array
+            items:
+              type: string
+        - name: event
+          in: query
+          description: Filter by event
+          example: read
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EvaluatedPermissions"
+      security:
+        - auth:
+          - registry.tickets.read
   /permissions/{id}:
     get:
       description: Return a permission
@@ -928,7 +980,12 @@ components:
         permissions:
           type: array
           items:
-            $ref: "#/components/schemas/Permission" 
+            $ref: "#/components/schemas/Permission"
+    EvaluatedPermissions:
+      type: array
+      items:
+        type: string
+        description: ID of the thing with the evaluated permissions
     Error:
       type: object
       properties:
