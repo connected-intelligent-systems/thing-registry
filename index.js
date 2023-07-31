@@ -1,7 +1,6 @@
 'use strict'
 
 require('dotenv').config()
-console.log(process.env)
 const express = require('express')
 const env = require('env-var')
 const path = require('path')

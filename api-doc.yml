@@ -383,28 +383,6 @@ paths:
             type: array
             items:
               type: string
-        - name: property
-          in: query
-          description: Filter by property
-          example: read
-          schema:
-            type: string
-        - name: action
-          in: query
-          description: Filter by action
-          example: read
-          schema:
-            type: array
-            items:
-              type: string
-        - name: event
-          in: query
-          description: Filter by event
-          example: read
-          schema:
-            type: array
-            items:
-              type: string
       responses:
         '200':
           description: Successful operation
@@ -946,18 +924,6 @@ components:
             $ref: "#/components/schemas/Scope" 
           example: 
             [ "invoke", "read" ]
-        properties:
-          type: array
-          items:
-            type: string
-        actions:
-          type: array
-          items:
-            type: string
-        events:
-          type: array
-          items:
-            type: string
       required:
         - thingId
         - entityName

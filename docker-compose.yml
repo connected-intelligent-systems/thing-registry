@@ -1,26 +1,27 @@
 version: "3.1"
 
 services:
-  # registry:
-  #   build: .
-  #   volumes:
-  #     - ./index.js:/app/index.js
-  #     - ./api-doc.yml:/app/api-doc.yml
-  #     - ./lib:/app/lib
-  #     - ./plugins:/app/plugins
-  #   environment:
-  #     NODE_ENV: development
-  #     KEYCLOAK_HOST: http://auth.192-168-178-60.nip.io
-  #     KEYCLOAK_REALM: dataspace
-  #     RESOURCE_SERVER_AUDIENCE: api-gateway
-  #     RESOURCE_CLIENT_ID: api-gateway
-  #     RESOURCE_CLIENT_SECRET: 7SkmAdTp8xhL
-  #   ports:
-  #     - 8090:80
-  #     - 9229:9229
-  #   depends_on: 
-  #     - mongo
-  #     - redis
+  registry:
+    build: .
+    volumes:
+      - ./index.js:/app/index.js
+      - ./api-doc.yml:/app/api-doc.yml
+      - ./lib:/app/lib
+      - ./plugins:/app/plugins
+    environment:
+      NODE_ENV: development
+      KEYCLOAK_HOST: ${KEYCLOAK_HOST}
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM}
+      RESOURCE_SERVER_AUDIENCE: ${RESOURCE_SERVER_AUDIENCE}
+      RESOURCE_CLIENT_ID: ${RESOURCE_CLIENT_SECRET}
+      RESOURCE_CLIENT_SECRET: mongodb://mongo:27017/?replicaSet=rs0
+      PORT: 8080
+    ports:
+      - 8080:8080
+      - 9229:9229
+    depends_on: 
+      - mongo
+      - redis
 
   mongo:
     image: bitnami/mongodb:4.4
@@ -30,7 +31,7 @@ services:
       - MONGODB_REPLICA_SET_MODE=primary
       - ALLOW_EMPTY_PASSWORD=yes
       - MONGODB_REPLICA_SET_NAME=rs0
-      - MONGODB_ADVERTISED_HOSTNAME=localhost
+      - MONGODB_ADVERTISED_HOSTNAME=mongo
 
   redis:
     image: redis

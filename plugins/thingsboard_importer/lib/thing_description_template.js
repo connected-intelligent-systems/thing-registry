@@ -2,7 +2,6 @@
 
 function getAttribute (attributes, key, name) {
   const attribute = attributes.find(d => d.key === key)
-  console.log(attribute)
   if (attribute) {
     return attribute.value[name]
   }
