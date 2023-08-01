@@ -46,6 +46,7 @@
     "lodash": "^4.17.20",
     "mongodb": "4.4",
     "mongodb-credentials": "file:plugins/mongodb_credentials",
+    "query-string": "^6.13.8",
     "rdf-store": "file:plugins/rdf_store",
     "redis": "^3.1.2",
     "thingsboard-importer": "file:plugins/thingsboard_importer",

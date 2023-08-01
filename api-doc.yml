@@ -375,6 +375,14 @@ paths:
             type: array
             items:
               type: string
+        - name: affordance_id
+          in: query
+          description: Filter by affordance id
+          example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b/properties/status
+          schema:
+            type: array
+            items:
+              type: string
         - name: scope
           in: query
           description: Filter by scope
@@ -909,10 +917,22 @@ components:
           type: string
           description: Id of the permission
           example: d4fdbdd9-a586-4dfc-8858-0cdda8c8d463
-        thingId:
-          type: string
-          description: Target thing of the permission
-          example: uri:urn:thing-id
+        thingIds:
+          type: array
+          items:
+            type: string
+          description: Target thing ids of the permission
+          example: [ 
+            uri:urn:thing-id
+          ]
+        affordances:
+          type: array
+          items:
+            type: string
+          description: Target affordances of the permission
+          example: [ 
+            uri:urn:thing-id/properties/status
+          ]
         entityName:
           type: string
           description: Clear name of the entity e.g. email or groupname
@@ -925,7 +945,7 @@ components:
           example: 
             [ "invoke", "read" ]
       required:
-        - thingId
+        - thingIds
         - entityName
         - scopes
     Permissions:
