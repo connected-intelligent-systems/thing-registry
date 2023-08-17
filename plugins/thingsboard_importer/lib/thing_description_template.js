@@ -1,5 +1,12 @@
 'use strict'
 
+const env = require('env-var')
+const { createSchema } = require('genson-js')
+const ThingsBoardUrl = env
+  .get('THINGSBOARD_API_URL')
+  .required(true)
+  .asString()
+
 function getAttribute (attributes, key, name) {
   const attribute = attributes.find(d => d.key === key)
   if (attribute) {
@@ -36,19 +43,27 @@ function generateProperties (device) {
           keys: {
             type: 'string',
             const: v
+          },
+          useStrictDataTypes: {
+            type: 'string',
+            const: 'true'
           }
         },
         properties: {
-          value: {
-            type: 'string'
-          },
-          ts: {
-            type: 'integer'
+          [v]: {
+            value: {
+              ...createSchema(device.timeseries[v][0].value, {
+                noRequired: true
+              })
+            },
+            ts: {
+              type: 'integer'
+            }
           }
         },
         forms: [
           {
-            href: `http://192-168-178-60.nip.io/api/plugins/telemetry/DEVICE/${device.id.id}/values/timeseries?keys=${v}`
+            href: `${ThingsBoardUrl}/api/plugins/telemetry/DEVICE/${device.id.id}/values/timeseries`
           }
         ]
       }
@@ -69,6 +84,10 @@ function generateActions (device) {
             type: 'string',
             const: v
           },
+          useStrictDataTypes: {
+            type: 'string',
+            const: 'true'
+          },
           startTs: {
             type: 'integer'
           },
@@ -78,7 +97,7 @@ function generateActions (device) {
         },
         properties: {
           value: {
-            type: 'string'
+            ...createSchema(device.timeseries[v][0].value, { noRequired: true })
           },
           ts: {
             type: 'integer'
@@ -86,7 +105,7 @@ function generateActions (device) {
         },
         forms: [
           {
-            href: 'http://localhost:8090',
+            href: `${ThingsBoardUrl}/api/plugins/telemetry/DEVICE/${device.id.id}/values/timeseries`,
             'htv:methodName': 'GET'
           }
         ]

@@ -4,8 +4,8 @@ const env = require('env-var')
 const axios = require('axios')
 
 const ThingsBoardUrl = env
-  .get('THINGBOARD_API_URL')
-  .default('http://192-168-178-60.nip.io')
+  .get('THINGSBOARD_API_URL')
+  .required(true)
   .asString()
 
 async function getDevices ({ page = 0, pageSize = 20, accessToken } = {}) {
@@ -44,7 +44,7 @@ async function getAttributes ({ accessToken, deviceId }) {
 
 async function getTimeseries ({ accessToken, deviceId }) {
   const response = await axios.get(
-    `${ThingsBoardUrl}/api/plugins/telemetry/DEVICE/${deviceId}/values/timeseries`,
+    `${ThingsBoardUrl}/api/plugins/telemetry/DEVICE/${deviceId}/values/timeseries?useStrictDataTypes=true`,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`
