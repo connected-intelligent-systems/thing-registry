@@ -33,6 +33,14 @@ services:
       - MONGODB_REPLICA_SET_NAME=rs0
       - MONGODB_ADVERTISED_HOSTNAME=mongo
 
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: postgres
+
   redis:
     image: redis
 

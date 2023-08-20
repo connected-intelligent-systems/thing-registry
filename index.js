@@ -175,19 +175,19 @@ async function initServer () {
     consumesMiddleware: {
       'application/json': express.json()
     },
-    securityHandlers: {
-      auth: (req, scopes) => {
-        if (req.auth) {
-          const tokenScopes = req.auth.access_token.content.scope.split(' ')
-          if (scopes.every(r => tokenScopes.includes(r))) {
-            return true
-          } else {
-            throw new InvalidOrMissingScope()
-          }
-        }
-        throw new InvalidOrMissingToken()
-      }
-    }
+    // securityHandlers: {
+    //   auth: (req, scopes) => {
+    //     if (req.auth) {
+    //       const tokenScopes = req.auth.access_token.content.scope.split(' ')
+    //       if (scopes.every(r => tokenScopes.includes(r))) {
+    //         return true
+    //       } else {
+    //         throw new InvalidOrMissingScope()
+    //       }
+    //     }
+    //     throw new InvalidOrMissingToken()
+    //   }
+    // }
   })
 
   // we don't use openapi to describe the exposed thing endpoints

@@ -6,10 +6,17 @@ servers:
 - url: http://localhost:8080/registry
   description: Thing Registry
 paths:
-  /things:
+  /{tenantId}/things:
     get:
       description: Returns all registered thing descriptions
       parameters:
+      - name: tenantId
+        in: path
+        description: ID of the tenant
+        example: 6f0685ad-8a08-431a-b700-6dd1a236335b
+        required: true
+        schema:
+          type: string
       - in: query
         name: page_size
         schema:
@@ -94,10 +101,17 @@ paths:
       security:
         - auth:
           - registry.thing.create
-  /things/{id}:
+  /{tenantId}/things/{id}:
     get:
       description: Returns a specific thing description
       parameters:
+      - name: tenantId
+        in: path
+        description: ID of the tenant
+        example: 6f0685ad-8a08-431a-b700-6dd1a236335b
+        required: true
+        schema:
+          type: string
       - name: id
         in: path
         description: ID of the thing description
@@ -187,17 +201,24 @@ paths:
       security:
         - auth:
           - registry.thing.delete
-  /things/{id}/credentials:
+  /{tenantId}/things/{id}/credentials:
     put:
       description: Updates the credentials of thing. Only the owner can update credentials.
       parameters:
-        - name: id
-          in: path
-          description: ID of the thing description
-          example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
-          required: true
-          schema:
-            type: string
+      - name: tenantId
+        in: path
+        description: ID of the tenant
+        example: 6f0685ad-8a08-431a-b700-6dd1a236335b
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: ID of the thing description
+        example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
+        required: true
+        schema:
+          type: string
       requestBody:
         required: true
         content:
@@ -230,28 +251,7 @@ paths:
       security:
         - auth:
           - registry.thing.credentials
-  /things/{id}/access:
-    get:
-      description: Return information about the permissions and access right of the thing
-      parameters:
-        - name: id
-          in: path
-          description: ID of the thing description
-          example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ThingAccess"
-      security:
-        - auth:
-          - registry.thing.read
-  /query:
+  /{tenantId}/query:
     get:
       description: Query thing descriptions
       parameters:
@@ -305,136 +305,6 @@ paths:
       security:
         - auth:
           - registry.thing.validate
-  /permissions:
-     get:
-      description: Return all permissions of the affordance of a specific user
-      parameters:
-        - in: query
-          name: page_size
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 50
-          required: false
-          description: Limit the number of returned permissions per page
-          example: 30
-        - in: query
-          name: page
-          schema:
-            type: integer
-            example: 1
-            minimum: 1
-            default: 1
-          required: false
-          description: Number of the page
-        - name: thingId
-          in: query
-          description: Filter by thing id
-          example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
-          schema:
-            type: string
-        - name: entity_name
-          in: query
-          description: Filter by entity_name
-          example: test@example.com
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Permissions"
-      security:
-        - auth:
-          - registry.tickets.read
-     post:
-      description: Create a new permission for a resource
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Permission"
-      responses:
-        '201':
-          description: Successful operation
-      security:
-        - auth:
-          - registry.tickets.create
-  /permissions/eval:
-     get:
-      description: Query permissions
-      parameters:
-        - name: thing_id
-          in: query
-          description: Filter by thing id
-          example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
-          schema:
-            type: array
-            items:
-              type: string
-        - name: affordance_id
-          in: query
-          description: Filter by affordance id
-          example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b/properties/status
-          schema:
-            type: array
-            items:
-              type: string
-        - name: scope
-          in: query
-          description: Filter by scope
-          example: read
-          schema:
-            type: array
-            items:
-              type: string
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/EvaluatedPermissions"
-      security:
-        - auth:
-          - registry.tickets.read
-  /permissions/{id}:
-    get:
-      description: Return a permission
-      parameters:
-        - name: id
-          in: path
-          description: ID of the thing description
-          example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Permission"
-    delete:
-      description: Return all permissions of the affordance of a specific user
-      parameters:
-        - name: id
-          in: path
-          description: ID of the permission
-          example: fdf488a8-2b27-4353-92a4-05f697e720cc
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Successful operation
-      security:
-        - auth:
-          - registry.tickets.delete
   /version:
     get:
       description: Returns the version of the registry
@@ -445,8 +315,16 @@ paths:
             application/n-triples:
               schema:
                 $ref: '#/components/schemas/ServerVersion'
-  /discovery:
+  /{tenantId}/discovery:
     get:
+      parameters:
+      - name: tenantId
+        in: path
+        description: ID of the tenant
+        example: 6f0685ad-8a08-431a-b700-6dd1a236335b
+        required: true
+        schema:
+          type: string
       description: Returns all plugins
       responses:
         '200':
@@ -458,17 +336,24 @@ paths:
       security:
         - auth:
           - registry.plugin.read
-  /discovery/{id}:
+  /{tenantId}/discovery/{id}:
     get:
       description: Return a plugin description
       parameters:
-        - name: id
-          in: path
-          description: Name of the plugin
-          example: thingsboard-importer
-          required: true
-          schema:
-            type: string
+      - name: tenantId
+        in: path
+        description: ID of the tenant
+        example: 6f0685ad-8a08-431a-b700-6dd1a236335b
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: Name of the plugin
+        example: thingsboard-importer
+        required: true
+        schema:
+          type: string
       responses:
         '200':
           description: Successful operation
@@ -479,17 +364,24 @@ paths:
       security:
         - auth:
           - registry.plugin.read
-  /discovery/{id}/settings:
+  /{tenantId}/discovery/{id}/settings:
     get:
       description: Return a plugin description
       parameters:
-        - name: id
-          in: path
-          description: Name of the plugin
-          example: thingsboard-importer
-          required: true
-          schema:
-            type: string
+      - name: tenantId
+        in: path
+        description: ID of the tenant
+        example: 6f0685ad-8a08-431a-b700-6dd1a236335b
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: Name of the plugin
+        example: thingsboard-importer
+        required: true
+        schema:
+          type: string
       responses:
         '200':
           description: Successful operation
@@ -522,52 +414,66 @@ paths:
       security:
         - auth:
           - registry.plugin.write
-  /discovery/{id}/scan:
+  /{tenantId}/discovery/{id}/scan:
     post:
       description: Discover things
       parameters:
-        - name: id
-          in: path
-          description: Name of the plugin
-          example: thingsboard-importer
-          required: true
-          schema:
-            type: string
+      - name: tenantId
+        in: path
+        description: ID of the tenant
+        example: 6f0685ad-8a08-431a-b700-6dd1a236335b
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: Name of the plugin
+        example: thingsboard-importer
+        required: true
+        schema:
+          type: string
       responses:
         '200':
           description: Successful operation
       security:
         - auth:
           - registry.plugin.discover
-  /inbox:
+  /{tenantId}/inbox:
     get:
       description: Returns a list of discovered things
       parameters:
-        - in: query
-          name: page_size
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 50
-          required: false
-          description: Limit the number of returned things by page
-          example: 30
-        - in: query
-          name: page
-          schema:
-            type: integer
-            example: 1
-            minimum: 1
-            default: 1
-          required: false
-          description: Return the page of things
-        - name: resolve
-          in: query
-          description: True if the thing description should resolve
-          example: false
-          schema:
-            type: boolean
+      - name: tenantId
+        in: path
+        description: ID of the tenant
+        example: 6f0685ad-8a08-431a-b700-6dd1a236335b
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: page_size
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
+        required: false
+        description: Limit the number of returned things by page
+        example: 30
+      - in: query
+        name: page
+        schema:
+          type: integer
+          example: 1
+          minimum: 1
+          default: 1
+        required: false
+        description: Return the page of things
+      - name: resolve
+        in: query
+        description: True if the thing description should resolve
+        example: false
+        schema:
+          type: boolean
       responses:
         '200':
           description: Successful operation
@@ -578,17 +484,24 @@ paths:
       security:
         - auth:
           - registry.plugin.discover
-  /inbox/{thingId}:
+  /{tenantId}/inbox/{thingId}:
     get:
       description: Returns a discovered thing by ID
       parameters:
-        - name: thingId
-          in: path
-          description: ID of the thing
-          example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
-          required: true
-          schema:
-            type: string
+      - name: tenantId
+        in: path
+        description: ID of the tenant
+        example: 6f0685ad-8a08-431a-b700-6dd1a236335b
+        required: true
+        schema:
+          type: string
+      - name: thingId
+        in: path
+        description: ID of the thing
+        example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
+        required: true
+        schema:
+          type: string
       responses:
         '200':
           description: Successful operation
@@ -599,17 +512,24 @@ paths:
       security:
         - auth:
           - registry.plugin.discover
-  /inbox/{thingId}/approve:
+  /{tenantId}/inbox/{thingId}/approve:
     put:
       description: Import discovered things
       parameters:
-        - name: thingId
-          in: path
-          description: ID of the thing
-          example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
-          required: true
-          schema:
-            type: string
+      - name: tenantId
+        in: path
+        description: ID of the tenant
+        example: 6f0685ad-8a08-431a-b700-6dd1a236335b
+        required: true
+        schema:
+          type: string
+      - name: thingId
+        in: path
+        description: ID of the thing
+        example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
+        required: true
+        schema:
+          type: string
       requestBody:
         description: Discovered things to import
         required: true
