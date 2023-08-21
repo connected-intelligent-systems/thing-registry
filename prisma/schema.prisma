@@ -33,3 +33,12 @@ model DiscoveredThing {
 
   @@unique([tenantId, id])
 }
+
+model Credential {
+  id       Int    @id @default(autoincrement())
+  tenantId String
+  thingId  String
+  data     Json
+
+  @@unique([tenantId, thingId])
+}
