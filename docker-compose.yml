@@ -20,18 +20,7 @@ services:
       - 8080:8080
       - 9229:9229
     depends_on: 
-      - mongo
-      - redis
-
-  mongo:
-    image: bitnami/mongodb:4.4
-    ports: 
-      - 27017:27017
-    environment:
-      - MONGODB_REPLICA_SET_MODE=primary
-      - ALLOW_EMPTY_PASSWORD=yes
-      - MONGODB_REPLICA_SET_NAME=rs0
-      - MONGODB_ADVERTISED_HOSTNAME=mongo
+      - db
 
   db:
     image: postgres
@@ -40,7 +29,3 @@ services:
       - 5432:5432
     environment:
       POSTGRES_PASSWORD: postgres
-
-  redis:
-    image: redis
-

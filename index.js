@@ -19,7 +19,7 @@ const {
 
 const Port = env
   .get('PORT')
-  .default(80)
+  .default(8080)
   .asIntPositive()
 
 /**
@@ -163,8 +163,9 @@ async function initServer () {
   const app = initExpress()
   const apiDoc = generateApiDoc()
 
-  await initModels()
-  await initServices()
+  // await initModels()
+  // await initServices()
+  await models.plugin.init()
 
   const framework = openapi.initialize({
     apiDoc,
@@ -174,7 +175,7 @@ async function initServer () {
     docsPath: '/.openapi',
     consumesMiddleware: {
       'application/json': express.json()
-    },
+    }
     // securityHandlers: {
     //   auth: (req, scopes) => {
     //     if (req.auth) {

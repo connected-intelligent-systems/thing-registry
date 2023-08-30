@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@prisma/client": "^5.1.1",
+    "@thing-description-playground/defaults": "^1.4.0",
     "ajv": "^6.10.2",
     "ajv-formats-draft2019": "^1.4.3",
     "chai-as-promised": "^7.1.1",
@@ -52,6 +53,7 @@
     "rdf-store": "file:plugins/rdf_store",
     "redis": "^3.1.2",
     "thingsboard-importer": "file:plugins/thingsboard_importer",
+    "discovery-test": "file:plugins/discovery_test",
     "uuid": "^9.0.0",
     "vault-storage": "file:plugins/vault_storage"
   }

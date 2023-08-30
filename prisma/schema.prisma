@@ -11,34 +11,59 @@ datasource db {
 }
 
 model Thing {
-  id          String   @id
-  tenantId    String
-  title       String
-  types       String[]
-  description Json
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id                String   @id
+  tenantId          String
+  title             String
+  types             String[]
+  description       Json
+  publicDescription Json
+  source            String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
   @@unique([tenantId, id])
 }
 
 model DiscoveredThing {
-  id          String   @id
-  tenantId    String
-  title       String
-  types       String[]
-  description Json
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id                String   @id
+  tenantId          String
+  title             String
+  types             String[]
+  description       Json
+  source            String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
   @@unique([tenantId, id])
 }
 
+model PublicForm {
+  thingId      String
+  tenantId     String
+  type         String
+  name         String
+  index        Int
+  description  Json
+  uriVariables Json?
+  source       String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@id([thingId, tenantId, type, name, index])
+}
+
 model Credential {
-  id       Int    @id @default(autoincrement())
   tenantId String
   thingId  String
   data     Json
 
-  @@unique([tenantId, thingId])
+  @@id([tenantId, thingId])
+}
+
+model PluginSettings {
+  name     String
+  tenantId String
+  settings Json
+
+  @@id([name, tenantId])
 }
