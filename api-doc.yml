@@ -309,14 +309,14 @@ paths:
       security:
         - auth:
           - registry.thing.delete
-  /{tenantId}/things/{id}/credentials:
+  /{tenantId}/things/{id}/{security}/credentials:
     put:
       description: Updates the credentials of thing. Only the owner can update credentials.
       parameters:
       - name: tenantId
         in: path
         description: ID of the tenant
-        example: 6f0685ad-8a08-431a-b700-6dd1a236335b
+        example: 80b4ee8a-4805-11ee-be56-0242ac120002
         required: true
         schema:
           type: string
@@ -324,6 +324,13 @@ paths:
         in: path
         description: ID of the thing description
         example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
+        required: true
+        schema:
+          type: string
+      - name: security
+        in: path
+        description: Name of the security
+        example: basic_sc
         required: true
         schema:
           type: string
@@ -770,24 +777,18 @@ components:
         - owner
         - href
     Credentials:
-      type: array
-      items:
-        oneOf:
-          - $ref: '#/components/schemas/BasicCredentials'
-          - $ref: '#/components/schemas/BearerCredentials'
-          - $ref: '#/components/schemas/ApiKeyCredentials'
+      type: object
+      oneOf:
+        - $ref: '#/components/schemas/BasicCredentials'
+        - $ref: '#/components/schemas/BearerCredentials'
+        - $ref: '#/components/schemas/ApiKeyCredentials'
     BasicCredentials: 
       type: object
       required:
-        - security
         - username
         - password
       additionalProperties: false
       properties: 
-        security: 
-          type: string
-          description: Name of the security definition in the thing description
-          example: basic_sc
         username: 
           type: string
           description: Username of the basic authentication
@@ -797,14 +798,9 @@ components:
     BearerCredentials: 
       type: object
       required:
-        - security
         - token
       additionalProperties: false
       properties: 
-        security: 
-          type: string
-          description: Name of the security definition in the thing description
-          example: bearer_sc
         token: 
           type: string
           description: The bearer token to use
@@ -812,10 +808,6 @@ components:
       type: object
       additionalProperties: false
       properties:
-        security: 
-          type: string
-          description: Name of the security definition in the thing description
-          example: api_sc
         apiKey:
           type: string
           description: The api key to use

@@ -11,17 +11,17 @@ datasource db {
 }
 
 model Thing {
-  id                String       @id
-  tenantId          String
-  title             String
-  types             String[]
-  description       Json
-  publicDescription Json
-  source            String?
-  publicForms       PublicForm[]
-  credentials       Credential[]
-  createdAt         DateTime     @default(now())
-  updatedAt         DateTime     @updatedAt
+  id                 String               @id
+  tenantId           String
+  title              String
+  types              String[]
+  description        Json
+  publicDescription  Json
+  source             String?
+  publicForms        PublicForm[]
+  securityDefintions SecurityDefinition[]
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
 
   @@unique([tenantId, id])
 }
@@ -40,31 +40,35 @@ model DiscoveredThing {
 }
 
 model PublicForm {
-  thingId      String
-  tenantId     String
-  type         String
-  name         String
-  index        Int
-  description  Json
-  uriVariables Json?
-  source       String?
-  security     String[]
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  thingId            String
+  tenantId           String
+  type               String
+  name               String
+  security           String
+  index              Int
+  description        Json
+  uriVariables       Json?
+  source             String?
+  securityDefinition SecurityDefinition? @relation(fields: [thingId, tenantId, security], references: [thingId, tenantId, name], onDelete: Cascade)
+  thing              Thing?              @relation(fields: [thingId, tenantId], references: [id, tenantId], onDelete: Cascade)
 
-  thing Thing @relation(fields: [thingId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  @@id([thingId, tenantId, type, name, index])
+  @@id([thingId, tenantId, type, name, index, security])
 }
 
-model Credential {
-  tenantId String
-  thingId  String
-  data     Json
+model SecurityDefinition {
+  thingId     String
+  tenantId    String
+  name        String
+  scheme      String
+  description Json
+  credentials Json?
+  publicForms PublicForm[]
+  things      Thing        @relation(fields: [thingId, tenantId], references: [id, tenantId], onDelete: Cascade)
 
-  thing Thing @relation(fields: [thingId, tenantId], references: [id, tenantId], onDelete: Cascade)
-
-  @@id([tenantId, thingId])
+  @@id([thingId, tenantId, name])
 }
 
 model PluginSettings {

@@ -16,7 +16,6 @@ async function init ({ PluginTypes }) {
 }
 
 async function discover (settings, { credentialsStorage }) {
-  console.log(settings)
   return [
     {
       '@context': 'https://www.w3.org/2022/wot/td/v1.1',
@@ -29,33 +28,23 @@ async function discover (settings, { credentialsStorage }) {
       properties: {
         status: {
           type: 'string',
-          forms: [{ href: 'https://mylamp.example.com/status' }]
+          forms: [{ href: 'https://httpbin.org/get', public: true }]
         }
       },
       actions: {
         toggle: {
-          forms: [{ href: 'https://mylamp.example.com/toggle' }]
-        }
-      },
-      events: {
-        overheating: {
-          data: { type: 'string' },
-          forms: [
-            {
-              href: 'https://mylamp.example.com/oh',
-              subprotocol: 'longpoll'
-            }
-          ]
+          forms: [{ href: 'https://httpbin.org/post', public: true }]
         }
       }
     }
   ]
 }
 
-async function authenticate (form, { credentialsStorage }) {
-  return {
-    basic_sc: {
-      username: 'test',
+async function authenticate (form, { readSettings }) {
+  if (form.securityDefinition.credentials === null) {
+    const settings = await readSettings()
+    return {
+      username: settings.token,
       password: 'test'
     }
   }
