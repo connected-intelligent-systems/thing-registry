@@ -1,26 +1,26 @@
 version: "3.1"
 
 services:
-  registry:
-    build: .
-    volumes:
-      - ./index.js:/app/index.js
-      - ./api-doc.yml:/app/api-doc.yml
-      - ./lib:/app/lib
-      - ./plugins:/app/plugins
-    environment:
-      NODE_ENV: development
-      KEYCLOAK_HOST: ${KEYCLOAK_HOST}
-      KEYCLOAK_REALM: ${KEYCLOAK_REALM}
-      RESOURCE_SERVER_AUDIENCE: ${RESOURCE_SERVER_AUDIENCE}
-      RESOURCE_CLIENT_ID: ${RESOURCE_CLIENT_ID}
-      RESOURCE_CLIENT_SECRET: ${RESOURCE_CLIENT_SECRET}
-      PORT: 8080
-    ports:
-      - 8080:8080
-      - 9229:9229
-    depends_on: 
-      - db
+  # registry:
+  #   build: .
+  #   volumes:
+  #     - ./index.js:/app/index.js
+  #     - ./api-doc.yml:/app/api-doc.yml
+  #     - ./lib:/app/lib
+  #     - ./plugins:/app/plugins
+  #   environment:
+  #     NODE_ENV: development
+  #     KEYCLOAK_HOST: ${KEYCLOAK_HOST}
+  #     KEYCLOAK_REALM: ${KEYCLOAK_REALM}
+  #     RESOURCE_SERVER_AUDIENCE: ${RESOURCE_SERVER_AUDIENCE}
+  #     RESOURCE_CLIENT_ID: ${RESOURCE_CLIENT_ID}
+  #     RESOURCE_CLIENT_SECRET: ${RESOURCE_CLIENT_SECRET}
+  #     PORT: 8080
+  #   ports:
+  #     - 8080:8080
+  #     - 9229:9229
+  #   depends_on: 
+  #     - db
 
   db:
     image: postgres

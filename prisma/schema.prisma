@@ -11,28 +11,30 @@ datasource db {
 }
 
 model Thing {
-  id                String   @id
+  id                String       @id
   tenantId          String
   title             String
   types             String[]
   description       Json
   publicDescription Json
   source            String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  publicForms       PublicForm[]
+  credentials       Credential[]
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
 
   @@unique([tenantId, id])
 }
 
 model DiscoveredThing {
-  id                String   @id
-  tenantId          String
-  title             String
-  types             String[]
-  description       Json
-  source            String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id          String   @id
+  tenantId    String
+  title       String
+  types       String[]
+  description Json
+  source      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@unique([tenantId, id])
 }
@@ -46,8 +48,11 @@ model PublicForm {
   description  Json
   uriVariables Json?
   source       String?
+  security     String[]
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+
+  thing Thing @relation(fields: [thingId, tenantId], references: [id, tenantId], onDelete: Cascade)
 
   @@id([thingId, tenantId, type, name, index])
 }
@@ -56,6 +61,8 @@ model Credential {
   tenantId String
   thingId  String
   data     Json
+
+  thing Thing @relation(fields: [thingId, tenantId], references: [id, tenantId], onDelete: Cascade)
 
   @@id([tenantId, thingId])
 }

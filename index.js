@@ -36,30 +36,6 @@ function listen (app, port) {
 }
 
 /**
- * Inits all services by calling the init method.
- */
-async function initServices () {
-  for (const name of Object.keys(services)) {
-    const { init } = services[name]
-    if (init !== undefined) {
-      await init()
-    }
-  }
-}
-
-/**
- * Inits all the models by calling the init method
- */
-async function initModels () {
-  for (const name of Object.keys(models)) {
-    const { init } = models[name]
-    if (init !== undefined) {
-      await init()
-    }
-  }
-}
-
-/**
  * Creates a express instance with middlewares
  */
 function initExpress () {
@@ -93,21 +69,12 @@ function generateApiDoc () {
 function installExposedRoutes (app, basePaths) {
   basePaths.forEach(p => {
     app.all(
-      `${p}/things/:id/affordances/:type/:name/:index/exposed`,
+      `${p}/:tenantId/public/things/:id/:type/:name/:index/exposed`,
       async (req, res, next) => {
-        if (req.auth) {
-          const tokenScopes = req.auth.access_token.content.scope.split(' ')
-          if (tokenScopes.includes('registry.thing.execute')) {
-            try {
-              await req.services.forward(req, res, next)
-            } catch (e) {
-              next(e)
-            }
-          } else {
-            next(new InvalidOrMissingScope())
-          }
-        } else {
-          next(new InvalidOrMissingToken())
+        try {
+          await req.services.forward(req, res, next)
+        } catch (e) {
+          next(e)
         }
       }
     )
@@ -163,8 +130,6 @@ async function initServer () {
   const app = initExpress()
   const apiDoc = generateApiDoc()
 
-  // await initModels()
-  // await initServices()
   await models.plugin.init()
 
   const framework = openapi.initialize({
