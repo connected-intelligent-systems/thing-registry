@@ -7,15 +7,10 @@ const path = require('path')
 const http = require('http')
 const openapi = require('express-openapi')
 const middlewares = require('./lib/middlewares')
-const services = require('./lib/services')
 const models = require('./lib/models')
 const { setupDnssd } = require('./lib/utils/dnssd')
 const { readYaml } = require('./lib/utils/yaml')
-const {
-  HttpError,
-  InvalidOrMissingScope,
-  InvalidOrMissingToken
-} = require('./lib/utils/http_errors')
+const { HttpError } = require('./lib/utils/http_errors')
 
 const Port = env
   .get('PORT')
