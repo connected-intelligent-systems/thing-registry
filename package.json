@@ -7,6 +7,8 @@
     "start": "npm run start:production",
     "start:production": "cross-env NODE_ENV=production node .",
     "start:development": "cross-env NODE_ENV=development forever --killSignal=SIGTERM --minUptime 1000 --spinSleepTime 1000 -c 'node --inspect=0.0.0.0:9229' -w index.js .",
+    "migrate:development": "prisma migrate dev",
+    "migrate:production": "prisma migrate deploy",
     "lint": "prettier --write '**/*.js' && standard --fix '**/*.js'",
     "depcheck": "depcheck",
     "test": "mocha --exit --recursive -r dotenv/config",
