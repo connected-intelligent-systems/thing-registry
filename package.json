@@ -33,6 +33,7 @@
     "chai-as-promised": "^7.1.1",
     "cors": "^2.8.5",
     "cross-env": "^5.2.0",
+    "discovery-test": "file:plugins/discovery_test",
     "dnssd": "^0.4.1",
     "dotenv": "^16.3.1",
     "env-var": "^7.0.0",
@@ -42,21 +43,11 @@
     "http-proxy-agent": "^4.0.1",
     "http-proxy-middleware": "^0.19.1",
     "https-proxy-agent": "^5.0.0",
-    "jose": "^4.14.4",
     "js-yaml": "^3.13.1",
-    "jsonata": "^1.8.4",
     "jsonld": "^3.3.0",
-    "jsonpath": "^1.0.2",
-    "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.20",
-    "mongodb": "4.4",
-    "mongodb-credentials": "file:plugins/mongodb_credentials",
-    "query-string": "^6.13.8",
-    "rdf-store": "file:plugins/rdf_store",
     "redis": "^3.1.2",
     "thingsboard-importer": "file:plugins/thingsboard_importer",
-    "discovery-test": "file:plugins/discovery_test",
-    "uuid": "^9.0.0",
-    "vault-storage": "file:plugins/vault_storage"
+    "uuid": "^9.0.0"
   }
 }
