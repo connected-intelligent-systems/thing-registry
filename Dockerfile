@@ -14,10 +14,13 @@ WORKDIR /app
 RUN npm install --production
 RUN npm install cross-env
 
+COPY prisma /app/prisma
+RUN npx prisma generate
+
 COPY index.js /app
 COPY api-doc.yml /app
 COPY lib /app/lib
-COPY prisma /app/prisma
+
 
 EXPOSE 8080
 

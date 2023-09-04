@@ -10,10 +10,10 @@ services:
       - ./plugins:/app/plugins
       - ./prisma:/app/prisma
     environment:
-      NODE_ENV: development
+      # NODE_ENV: development
       PORT: 8080
       DATABASE_URL: postgresql://postgres:postgres@db:5432/thing_registry?postgres=public
-      THINGSBOARD_API_URL: http://172.17.0.1:9090
+      THINGSBOARD_API_URL: http://thingsboard:9090
     ports:
       - 8080:8080
       - 9229:9229
@@ -38,6 +38,3 @@ services:
       - "5683-5688:5683-5688/udp"
     environment:
       TB_QUEUE_TYPE: in-memory
-    volumes:
-      - ~/.mytb-data:/data
-      - ~/.mytb-logs:/var/log/thingsboard
