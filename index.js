@@ -64,7 +64,7 @@ function generateApiDoc () {
 function installExposedRoutes (app, basePaths) {
   basePaths.forEach(p => {
     app.all(
-      `${p}/:tenantId/public/things/:id/:type/:name/:index/exposed`,
+      `${p}/:tenantId/public/things/:id/:type/:name/:index`,
       async (req, res, next) => {
         try {
           await req.services.forward(req, res, next)

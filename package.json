@@ -26,6 +26,7 @@
     "standard": "^13.1.0"
   },
   "dependencies": {
+    "@node-wot/td-tools": "^0.8.7",
     "@prisma/client": "^5.1.1",
     "@thing-description-playground/defaults": "^1.4.0",
     "ajv": "^6.10.2",

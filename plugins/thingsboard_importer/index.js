@@ -7,7 +7,6 @@ const {
 const {
   getDevices,
   getAttributes,
-  getTimeseries,
   authenticateThingsboard
 } = require('./lib/thingsboard_api')
 
@@ -24,11 +23,16 @@ async function generateThingDescriptions (accessToken) {
       accessToken,
       deviceId: device.id.id
     })
-    device.timeseries = await getTimeseries({
-      accessToken,
-      deviceId: device.id.id
-    })
-    thingDescriptions.push(generateThingDescription(device))
+    const thingModelAttribute = device.attributes.find(
+      attribute => attribute.key === 'thing-model'
+    )
+    if (thingModelAttribute !== undefined) {
+      const thingDescription = await generateThingDescription(
+        device.id.id,
+        thingModelAttribute.value
+      )
+      thingDescriptions.push(thingDescription)
+    }
   }
   return thingDescriptions
 }
@@ -51,25 +55,22 @@ async function init ({ PluginTypes }) {
   }
 }
 
-async function discover (settings, { accessToken, credentialsStorage }) {
-  const { token } = await authenticateThingsboard(settings.username, settings.password)
+async function discover (settings) {
+  const { token } = await authenticateThingsboard(
+    settings.username,
+    settings.password
+  )
   return generateThingDescriptions(token)
 }
 
-async function authenticate (
-  target,
-  { credentialsStorage, accessToken, exchangeAccessToken }
-) {
-  let token = await credentialsStorage.get()
-  if (jwtIsExpired(token)) {
-    const impersonatedToken = await exchangeAccessToken(
-      accessToken.token,
-      target.owner
-    )
-    token = await reauthenticate(impersonatedToken, credentialsStorage)
-  }
-  return {
-    bearer_sc: {
+async function authenticate (form, { readSettings }) {
+  if (
+    form.securityDefinition.credentials === null ||
+    jwtIsExpired(form.securityDefinition.credentials.token)
+  ) {
+    const { username, password } = await readSettings()
+    const { token } = await authenticateThingsboard(username, password)
+    return {
       token
     }
   }
