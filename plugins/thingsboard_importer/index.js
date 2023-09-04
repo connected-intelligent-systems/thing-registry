@@ -35,19 +35,24 @@ async function generateThingDescriptions (accessToken) {
 
 async function init ({ PluginTypes }) {
   return {
-    type: PluginTypes.Discovery
+    type: PluginTypes.Discovery,
+    schema: {
+      type: 'object',
+      properties: {
+        username: {
+          type: 'string'
+        },
+        password: {
+          type: 'string'
+        }
+      },
+      required: ['username', 'password']
+    }
   }
 }
 
-async function reauthenticate (accessToken, credentialsStorage) {
-  const { token } = await authenticateThingsboard(accessToken)
-  // we store only the access token
-  await credentialsStorage.update(token)
-  return token
-}
-
-async function discover (_, { accessToken, credentialsStorage }) {
-  const token = await reauthenticate(accessToken.token, credentialsStorage)
+async function discover (settings, { accessToken, credentialsStorage }) {
+  const { token } = await authenticateThingsboard(settings.username, settings.password)
   return generateThingDescriptions(token)
 }
 

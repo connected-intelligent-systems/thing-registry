@@ -54,10 +54,10 @@ async function getTimeseries ({ accessToken, deviceId }) {
   return response.data
 }
 
-async function authenticateThingsboard (accessToken) {
+async function authenticateThingsboard (username, password) {
   const response = await axios.post(`${ThingsBoardUrl}/api/auth/login`, {
-    username: 'oauth2-token',
-    password: accessToken
+    username,
+    password
   })
   return response.data
 }

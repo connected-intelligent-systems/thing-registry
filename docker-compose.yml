@@ -12,7 +12,8 @@ services:
     environment:
       NODE_ENV: development
       PORT: 8080
-      DATABASE_URL: postgresql://postgres:postgres@db:5432/thing-registry?postgres=public
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/thing_registry?postgres=public
+      THINGSBOARD_API_URL: http://172.17.0.1:9090
     ports:
       - 8080:8080
       - 9229:9229
@@ -26,3 +27,17 @@ services:
       - 5432:5432
     environment:
       POSTGRES_PASSWORD: postgres
+
+  thingsboard:
+    restart: always
+    image: "thingsboard/tb-postgres"
+    ports:
+      - "9090:9090"
+      - "1883:1883"
+      - "7070:7070"
+      - "5683-5688:5683-5688/udp"
+    environment:
+      TB_QUEUE_TYPE: in-memory
+    volumes:
+      - ~/.mytb-data:/data
+      - ~/.mytb-logs:/var/log/thingsboard
