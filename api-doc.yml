@@ -1,7 +1,7 @@
 openapi: "3.0.0"
 info:
   title: Thing Description Registry
-  version: 0.4.0
+  version: 0.5.0
 servers:
 - url: http://localhost:8080/registry
   description: Thing Registry
