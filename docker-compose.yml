@@ -10,7 +10,7 @@ services:
       - ./plugins:/app/plugins
       - ./prisma:/app/prisma
     environment:
-      # NODE_ENV: development
+      NODE_ENV: development
       PORT: 8080
       DATABASE_URL: postgresql://postgres:postgres@db:5432/thing_registry?postgres=public
       THINGSBOARD_API_URL: http://thingsboard:9090
