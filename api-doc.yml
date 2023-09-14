@@ -90,9 +90,6 @@ paths:
         '200':
           description: Successful operation
           content:
-            application/n-triples:
-              schema:
-                type: string
             application/td+json:
               schema:
                 $ref: "#/components/schemas/ThingDescription"
@@ -227,9 +224,6 @@ paths:
         '200':
           description: Successful operation
           content:
-            application/n-triples:
-              schema:
-                type: string
             application/td+json:
               schema:
                 $ref: "#/components/schemas/ThingDescription"
@@ -468,7 +462,7 @@ paths:
         '200':
           description: Successful operation
           content:
-            application/n-triples:
+            application/json:
               schema:
                 $ref: '#/components/schemas/ServerVersion'
   /{tenantId}/discovery:
