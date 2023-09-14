@@ -310,6 +310,37 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+  /{tenantId}/things/{id}/openapi:
+    get:
+      description: Returns a specific thing description converted to openapi
+      parameters:
+      - name: tenantId
+        in: path
+        description: ID of the tenant
+        example: 6f0685ad-8a08-431a-b700-6dd1a236335b
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: ID of the thing description
+        example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ThingDescription"
+        '404':
+          description: Thing description not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
   /{tenantId}/things/{id}/{security}/credentials:
     put:
       description: Updates the credentials of thing. Only the owner can update credentials.

@@ -27,14 +27,3 @@ services:
       - 5432:5432
     environment:
       POSTGRES_PASSWORD: postgres
-
-  thingsboard:
-    restart: always
-    image: "thingsboard/tb-postgres"
-    ports:
-      - "9090:9090"
-      - "1883:1883"
-      - "7070:7070"
-      - "5683-5688:5683-5688/udp"
-    environment:
-      TB_QUEUE_TYPE: in-memory
