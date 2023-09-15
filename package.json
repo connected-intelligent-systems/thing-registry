@@ -1,6 +1,6 @@
 {
   "name": "thing-registry",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "W3C Thing Description Registry",
   "main": "index.js",
   "scripts": {
