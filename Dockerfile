@@ -9,7 +9,6 @@ RUN mkdir /app
 COPY docker/run.sh /app
 RUN chmod +x /app/run.sh
 COPY package.json /app
-COPY plugins /app/plugins
 WORKDIR /app
 RUN npm install --production
 RUN npm install cross-env

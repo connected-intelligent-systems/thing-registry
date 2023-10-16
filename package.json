@@ -26,7 +26,6 @@
     "standard": "^13.1.0"
   },
   "dependencies": {
-    "@node-wot/td-tools": "^0.8.7",
     "@prisma/client": "^5.1.1",
     "@thing-description-playground/defaults": "^1.4.0",
     "@thing-description-playground/td_to_openapi": "^1.3.1",
@@ -35,7 +34,6 @@
     "chai-as-promised": "^7.1.1",
     "cors": "^2.8.5",
     "cross-env": "^5.2.0",
-    "discovery-test": "file:plugins/discovery_test",
     "dnssd": "^0.4.1",
     "dotenv": "^16.3.1",
     "env-var": "^7.0.0",
@@ -49,7 +47,6 @@
     "jsonld": "^3.3.0",
     "lodash": "^4.17.20",
     "redis": "^3.1.2",
-    "thingsboard-importer": "file:plugins/thingsboard_importer",
     "uuid": "^9.0.0"
   }
 }

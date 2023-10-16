@@ -13,6 +13,7 @@ datasource db {
 model Thing {
   id                 String               @id
   tenantId           String
+  customerId         String?
   title              String
   types              String[]
   description        Json
@@ -26,22 +27,10 @@ model Thing {
   @@unique([tenantId, id])
 }
 
-model DiscoveredThing {
-  id          String   @id
-  tenantId    String
-  title       String
-  types       String[]
-  description Json
-  source      String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@unique([tenantId, id])
-}
-
 model PublicForm {
   thingId            String
   tenantId           String
+  customerId         String?
   type               String
   name               String
   security           String
@@ -61,6 +50,7 @@ model PublicForm {
 model SecurityDefinition {
   thingId     String
   tenantId    String
+  customerId  String?
   name        String
   scheme      String
   description Json
@@ -69,12 +59,4 @@ model SecurityDefinition {
   things      Thing        @relation(fields: [thingId, tenantId], references: [id, tenantId], onDelete: Cascade)
 
   @@id([thingId, tenantId, name])
-}
-
-model PluginSettings {
-  name     String
-  tenantId String
-  settings Json
-
-  @@id([name, tenantId])
 }

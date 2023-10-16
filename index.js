@@ -7,7 +7,6 @@ const path = require('path')
 const http = require('http')
 const openapi = require('express-openapi')
 const middlewares = require('./lib/middlewares')
-const models = require('./lib/models')
 const { setupDnssd } = require('./lib/utils/dnssd')
 const { readYaml } = require('./lib/utils/yaml')
 const { HttpError } = require('./lib/utils/http_errors')
@@ -124,8 +123,6 @@ function installErrorHandler (app) {
 async function initServer () {
   const app = initExpress()
   const apiDoc = generateApiDoc()
-
-  await models.plugin.init()
 
   const framework = openapi.initialize({
     apiDoc,
