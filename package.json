@@ -1,6 +1,6 @@
 {
   "name": "thing-registry",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "W3C Thing Description Registry",
   "main": "index.js",
   "scripts": {
@@ -45,6 +45,7 @@
     "https-proxy-agent": "^5.0.0",
     "js-yaml": "^3.13.1",
     "jsonld": "^3.3.0",
+    "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.20",
     "redis": "^3.1.2",
     "uuid": "^9.0.0"
