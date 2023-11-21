@@ -6,17 +6,10 @@ servers:
 - url: http://localhost:8080/registry
   description: Thing Registry
 paths:
-  /{tenantId}/public/things:
+  /public/things:
     get:
       description: Returns all registered thing descriptions
       parameters:
-      - name: tenantId
-        in: path
-        description: ID of the tenant
-        example: 6f0685ad-8a08-431a-b700-6dd1a236335b
-        required: true
-        schema:
-          type: string
       - in: query
         name: page_size
         schema:
@@ -68,17 +61,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Things"
-  /{tenantId}/public/things/{id}:
+  /public/things/{id}:
     get:
       description: Returns a specific thing description
       parameters:
-      - name: tenantId
-        in: path
-        description: ID of the tenant
-        example: 6f0685ad-8a08-431a-b700-6dd1a236335b
-        required: true
-        schema:
-          type: string
       - name: id
         in: path
         description: ID of the thing description
@@ -105,17 +91,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  /{tenantId}/things:
+  /things:
     get:
       description: Returns all registered thing descriptions
       parameters:
-      - name: tenantId
-        in: path
-        description: ID of the tenant
-        example: 6f0685ad-8a08-431a-b700-6dd1a236335b
-        required: true
-        schema:
-          type: string
       - in: query
         name: page_size
         schema:
@@ -168,14 +147,6 @@ paths:
               schema:
                 $ref: "#/components/schemas/Things"
     post:
-      parameters:
-      - name: tenantId
-        in: path
-        description: ID of the tenant
-        example: 6f0685ad-8a08-431a-b700-6dd1a236335b
-        required: true
-        schema:
-          type: string
       description: Creates a new thing description
       requestBody:
         description: Thing description added
@@ -202,17 +173,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ValidationError"
-  /{tenantId}/things/{id}:
+  /things/{id}:
     get:
       description: Returns a specific thing description
       parameters:
-      - name: tenantId
-        in: path
-        description: ID of the tenant
-        example: 6f0685ad-8a08-431a-b700-6dd1a236335b
-        required: true
-        schema:
-          type: string
       - name: id
         in: path
         description: ID of the thing description
@@ -242,13 +206,6 @@ paths:
     put:
       description: Update a specific thing description
       parameters:
-      - name: tenantId
-        in: path
-        description: ID of the tenant
-        example: 6f0685ad-8a08-431a-b700-6dd1a236335b
-        required: true
-        schema:
-          type: string
       - name: id
         in: path
         description: ID of the thing description
@@ -281,13 +238,6 @@ paths:
     delete:
       description: Delete a specific thing description
       parameters:
-      - name: tenantId
-        in: path
-        description: ID of the tenant
-        example: 6f0685ad-8a08-431a-b700-6dd1a236335b
-        required: true
-        schema:
-          type: string
       - name: id
         in: path
         description: ID of the thing description
@@ -304,17 +254,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  /{tenantId}/things/{id}/openapi:
+  /things/{id}/openapi:
     get:
       description: Returns a specific thing description converted to openapi
       parameters:
-      - name: tenantId
-        in: path
-        description: ID of the tenant
-        example: 6f0685ad-8a08-431a-b700-6dd1a236335b
-        required: true
-        schema:
-          type: string
       - name: id
         in: path
         description: ID of the thing description
@@ -335,17 +278,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  /{tenantId}/things/{id}/{security}/credentials:
+  /things/{id}/{security}/credentials:
     put:
       description: Updates the credentials of thing. Only the owner can update credentials.
       parameters:
-      - name: tenantId
-        in: path
-        description: ID of the tenant
-        example: 80b4ee8a-4805-11ee-be56-0242ac120002
-        required: true
-        schema:
-          type: string
       - name: id
         in: path
         description: ID of the thing description
@@ -372,13 +308,6 @@ paths:
     get:
       description: Return the credentials of thing. Only the owner can return credentials.
       parameters:
-      - name: tenantId
-        in: path
-        description: ID of the tenant
-        example: 6f0685ad-8a08-431a-b700-6dd1a236335b
-        required: true
-        schema:
-          type: string
       - name: security
         in: path
         description: Name of the security
@@ -400,17 +329,10 @@ paths:
             application/json:
               schema:
                 type: object
-  /{tenantId}/query:
+  /query:
     get:
       description: Query thing descriptions
       parameters:
-      - name: tenantId
-        in: path
-        description: ID of the tenant
-        example: 6f0685ad-8a08-431a-b700-6dd1a236335b
-        required: true
-        schema:
-          type: string
       - in: query
         name: jsonpath
         schema:
