@@ -6,6 +6,7 @@ const env = require('env-var')
 const path = require('path')
 const http = require('http')
 const openapi = require('express-openapi')
+const swagger = require("swagger-ui-express");
 const middlewares = require('./lib/middlewares')
 const { setupDnssd } = require('./lib/utils/dnssd')
 const { readYaml } = require('./lib/utils/yaml')
@@ -43,12 +44,6 @@ function initExpress () {
  */
 function generateApiDoc () {
   const apiDoc = readYaml(path.join(__dirname, 'api-doc.yml'))
-  if (process.env.production === undefined) {
-    apiDoc.servers.push({
-      url: 'http://localhost:8090/registry',
-      description: 'Local development server'
-    })
-  }
   return {
     ...apiDoc,
     'x-express-openapi-validation-strict': true
@@ -73,6 +68,21 @@ function installExposedRoutes (app, basePaths) {
       }
     )
   })
+}
+
+/**
+ * Install Swagger-Ui routes
+ */
+function installSwaggerUi (app) {
+  app.use(
+    `/swagger-ui`,
+    swagger.serve,
+    swagger.setup(null, {
+      swaggerOptions: {
+        url: `/.openapi`,
+      }
+    })
+  );
 }
 
 /**
@@ -124,16 +134,17 @@ async function initServer () {
   const app = initExpress()
   const apiDoc = generateApiDoc()
 
-  const framework = openapi.initialize({
+  const framework = await openapi.initialize({
     apiDoc,
     app,
     paths: path.resolve(__dirname, './lib/routes/'),
-    exposeApiDocs: true,
     docsPath: '/.openapi',
     consumesMiddleware: {
       'application/json': express.json()
     }
   })
+
+  installSwaggerUi(app)
 
   // we don't use openapi to describe the exposed thing endpoints
   // as openapi doesn't has the best tools to describe generic datatypes etc.
