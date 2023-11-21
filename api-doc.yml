@@ -1,7 +1,7 @@
 openapi: "3.0.0"
 info:
   title: Thing Description Registry
-  version: 0.5.3
+  version: 0.6.2
 paths:
   /public/things:
     get:
@@ -300,8 +300,25 @@ paths:
             schema:
               $ref: '#/components/schemas/Credentials'
       responses:
+        '404':
+          description: Description not found
+          content:
+            application/json:
+              example:
+                {
+                  "status": 404,
+                  "error": "description_not_found",
+                  "message": "Description not found"
+                }
         '200':
           description: Successful operation
+          content:
+            application/json:
+              example:
+                {
+                  "password": "string",
+                  "username": "string"
+                }
     get:
       description: Return the credentials of thing. Only the owner can return credentials.
       parameters:
@@ -334,27 +351,37 @@ paths:
         name: jsonpath
         schema:
           type: string
+          example: $.properties.* ? (@.type == "iot:PowerMonitoring")
         required: false
         description: A jsonpath query
-      - in: query
-        name: jsonata
-        schema:
-          type: string
-        required: false
-        description: A jsonata query
-      - in: query
-        name: frame
-        schema:
-          type: string
-        required: false
-        description: a jsonld frame
       responses:
         '200':
           description: Returns query result
           content:
             application/json:
               schema:
-                type: object
+                type: array
+              example:
+                [
+                  {
+                    "result": {
+                      "type": "string",
+                      "forms": [
+                        {
+                          "op": [
+                            "readproperty",
+                            "writeproperty"
+                          ],
+                          "href": "https://mylamp.example.com/status",
+                          "contentType": "application/json"
+                        }
+                      ],
+                      "readOnly": false,
+                      "writeOnly": false,
+                      "observable": false
+                    }
+                  }
+                ]
   /validate:
     post:
       description: Validates a thing description

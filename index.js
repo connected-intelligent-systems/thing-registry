@@ -6,7 +6,7 @@ const env = require('env-var')
 const path = require('path')
 const http = require('http')
 const openapi = require('express-openapi')
-const swagger = require("swagger-ui-express");
+const swagger = require('swagger-ui-express')
 const middlewares = require('./lib/middlewares')
 const { setupDnssd } = require('./lib/utils/dnssd')
 const { readYaml } = require('./lib/utils/yaml')
@@ -16,6 +16,12 @@ const Port = env
   .get('PORT')
   .default(8080)
   .asIntPositive()
+
+const BasePath = env
+  .get('BASE_PATH')
+  .default('/api/registry')
+  .required()
+  .asString()
 
 /**
  * Binds and listens for connections for the express instance
@@ -44,6 +50,11 @@ function initExpress () {
  */
 function generateApiDoc () {
   const apiDoc = readYaml(path.join(__dirname, 'api-doc.yml'))
+  apiDoc.servers = [
+    {
+      url: BasePath
+    }
+  ]
   return {
     ...apiDoc,
     'x-express-openapi-validation-strict': true
@@ -53,21 +64,19 @@ function generateApiDoc () {
 /**
  * Installs all routes to handle exposed things through the registry
  * @param {object} app - The express instance
- * @param {array} basePaths - Configured basePaths in the openapi doc (servers)
+ * @param {array} basePath - Base path of the service e.g. /api/registry
  */
-function installExposedRoutes (app, basePaths) {
-  basePaths.forEach(p => {
-    app.all(
-      `${p}/:tenantId/public/things/:id/:type/:name/:index`,
-      async (req, res, next) => {
-        try {
-          await req.services.forward(req, res, next)
-        } catch (e) {
-          next(e)
-        }
+function installExposedRoutes (app) {
+  app.all(
+    `${BasePath}/:tenantId/public/things/:id/:type/:name/:index`,
+    async (req, res, next) => {
+      try {
+        await req.services.forward(req, res, next)
+      } catch (e) {
+        next(e)
       }
-    )
-  })
+    }
+  )
 }
 
 /**
@@ -75,14 +84,14 @@ function installExposedRoutes (app, basePaths) {
  */
 function installSwaggerUi (app) {
   app.use(
-    `/swagger-ui`,
+    `${BasePath}/swagger-ui`,
     swagger.serve,
     swagger.setup(null, {
       swaggerOptions: {
-        url: `/.openapi`,
+        url: `${BasePath}/.openapi`
       }
     })
-  );
+  )
 }
 
 /**
