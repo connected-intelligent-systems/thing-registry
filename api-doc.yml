@@ -1,7 +1,7 @@
 openapi: "3.0.0"
 info:
   title: Thing Description Registry
-  version: 0.6.2
+  version: 0.7.0
 paths:
   /public/things:
     get:
