@@ -149,7 +149,7 @@ async function initServer () {
     paths: path.resolve(__dirname, './lib/routes/'),
     docsPath: '/.openapi',
     consumesMiddleware: {
-      'application/json': express.json()
+      'application/json': express.json({ limit: '10mb' })
     }
   })
 
