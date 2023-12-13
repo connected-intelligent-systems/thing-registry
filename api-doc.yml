@@ -411,6 +411,30 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServerVersion'
+  /sparql:
+    post:
+      description: Returns the version of the registry
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                query: 
+                  type: string
+                  description: the sparql query
+              required: 
+                - query
+      responses:
+        '201':
+          description: Successful operation
+        '400':
+          description: Thing description is invalid
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
 components:
   schemas:
     ServerVersion:
