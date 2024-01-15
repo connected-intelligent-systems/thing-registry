@@ -1,7 +1,7 @@
 openapi: "3.0.0"
 info:
   title: Thing Description Registry
-  version: 0.7.1
+  version: 0.7.7
 paths:
   /public/things:
     get:
@@ -88,6 +88,26 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+  /public/sparql:
+    post:
+      description: Public SPARQL endpoint
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                query: 
+                  type: string
+                  description: the sparql query
+              required: 
+                - query
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid SPARQL query
   /things:
     get:
       description: Returns all registered thing descriptions
@@ -413,7 +433,7 @@ paths:
                 $ref: '#/components/schemas/ServerVersion'
   /sparql:
     post:
-      description: Returns the version of the registry
+      description: SPARQL endpoint
       requestBody:
         required: true
         content:
@@ -427,14 +447,10 @@ paths:
               required: 
                 - query
       responses:
-        '201':
+        '200':
           description: Successful operation
         '400':
-          description: Thing description is invalid
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ValidationError"
+          description: Invalid SPARQL query
 components:
   schemas:
     ServerVersion:
