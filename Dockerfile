@@ -2,11 +2,14 @@ FROM node:20.11.0-alpine3.18
 
 RUN apk --no-cache add curl
 
-RUN mkdir /app
+WORKDIR /app
+
 COPY docker/run.sh /app
 RUN chmod +x /app/run.sh
+
 COPY package.json /app
-WORKDIR /app
+COPY package-lock.json /app
+
 RUN npm install --production
 RUN npm install cross-env
 
