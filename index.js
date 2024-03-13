@@ -156,6 +156,11 @@ async function initServer () {
     }
   })
 
+  // health endpoint
+  app.get('/', (req, res) => {
+    res.send('OK')
+  })
+
   installSwaggerUi(app)
 
   // we don't use openapi to describe the exposed thing endpoints
