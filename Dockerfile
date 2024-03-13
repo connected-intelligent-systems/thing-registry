@@ -1,10 +1,6 @@
-FROM node:20
+FROM node:20.11.0-alpine3.18
 
-RUN apt-get update && apt-get install -y \
-  dumb-init \
-  && rm -rf /var/lib/apt/lists/*
-
-RUN npm install -g forever
+RUN apk --no-cache add curl
 
 RUN mkdir /app
 COPY docker/run.sh /app
@@ -27,4 +23,4 @@ USER node
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 CMD curl -f http://localhost:8080 || exit 1
 
-CMD ["dumb-init", "./run.sh"]
+CMD ["/app/run.sh"]
