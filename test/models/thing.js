@@ -1,12 +1,9 @@
 const assert = require('assert')
 const chai = require('chai')
 const expect = require('chai').expect
-const chaiAsPromised = require('chai-as-promised')
 const thing = require('../../lib/models/thing')
 const tdValid = require('../data/td_valid.json')
 const { connect } = require('../../lib/db')
-
-chai.use(chaiAsPromised)
 
 describe('Models', () => {
   describe('Thing', () => {
