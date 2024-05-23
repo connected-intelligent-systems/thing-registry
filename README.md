@@ -24,9 +24,19 @@ To get started, please refer to the `api-doc.yml` file for detailed information 
 
 ## Run
 
+### Docker Compose
+
 To run the Thing Registry, you can use Docker Compose to start a preconfigured working environment. The Docker Compose file, `docker-compose.yml`, includes the necessary configuration to set up the required services, such as PostgreSQL, Redis (optional), and Fuseki (optional).
 
 By running the following command in the terminal: ```docker-compose up```, you can start the Thing Registry.
+
+### Image
+
+```shell
+docker run -it --rm --name thing-registry \
+-e DATABASE_URL='postgresql://postgres:5432/thing-registry' \
+registry.fsn.iotx.materna.work/registry/public/thing-registry:latest
+```
 
 ## Environment Variables
 
