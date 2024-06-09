@@ -41,6 +41,12 @@ function listen (app, port) {
  */
 function initExpress () {
   const app = express()
+
+  // health endpoint
+  app.get('/', (req, res) => {
+    res.send('OK')
+  })
+
   app.use(middlewares)
   return app
 }
@@ -154,11 +160,6 @@ async function initServer () {
         extended: true
       })
     }
-  })
-
-  // health endpoint
-  app.get('/', (req, res) => {
-    res.send('OK')
   })
 
   installSwaggerUi(app)
