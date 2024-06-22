@@ -17,46 +17,9 @@ model Thing {
   title              String
   types              String[]
   description        Json
-  publicDescription  Json
   source             String?
-  publicForms        PublicForm[]
-  securityDefintions SecurityDefinition[]
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
 
   @@unique([tenantId, id])
-}
-
-model PublicForm {
-  thingId            String
-  tenantId           String
-  customerId         String?
-  type               String
-  name               String
-  security           String
-  index              Int
-  description        Json
-  uriVariables       Json?
-  source             String?
-  securityDefinition SecurityDefinition? @relation(fields: [thingId, tenantId, security], references: [thingId, tenantId, name], onDelete: Cascade)
-  thing              Thing?              @relation(fields: [thingId, tenantId], references: [id, tenantId], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@id([thingId, tenantId, type, name, index, security])
-}
-
-model SecurityDefinition {
-  thingId     String
-  tenantId    String
-  customerId  String?
-  name        String
-  scheme      String
-  description Json
-  credentials Json?
-  publicForms PublicForm[]
-  things      Thing        @relation(fields: [thingId, tenantId], references: [id, tenantId], onDelete: Cascade)
-
-  @@id([thingId, tenantId, name])
 }

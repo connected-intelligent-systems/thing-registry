@@ -14,17 +14,27 @@ services:
       PORT: 8080
       DATABASE_URL: ${DATABASE_URL}
       FUSEKI_URL: ${FUSEKI_URL}
-      FUSEKI_USERNAME: ${FUSEKI_USERNAME}
-      FUSEKI_PASSWORD: ${FUSEKI_PASSWORD}
+      FUSEKI_USERNAME: admin
+      FUSEKI_PASSWORD: fuseki
     ports:
       - 8080:8080
       - 9229:9229
     depends_on: 
       - db
 
+  fuseki:
+    image: stain/jena-fuseki
+    container_name: fuseki
+    environment:
+      - ADMIN_PASSWORD=fuseki
+    ports:
+      - 3030:3030
+
   db:
     image: postgres
     restart: always
+    ports:
+      - 5432:5432
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: thing_registry
