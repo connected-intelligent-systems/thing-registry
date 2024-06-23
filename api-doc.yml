@@ -166,6 +166,38 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+  /things/{id}/assign:
+    post:
+      description: Assign a thing description to an owner
+      parameters:
+      - name: id
+        in: path
+        description: ID of the thing description
+        example: uri:urn:6f0685ad-8a08-431a-b700-6dd1a236335b
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Customer to assign the thing to
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                customerId:
+                  type: string
+                  nullable: true
+                  description: The customer id to assign the thing to
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Thing description not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
   /things/{id}/openapi:
     get:
       description: Returns a specific thing description converted to openapi
