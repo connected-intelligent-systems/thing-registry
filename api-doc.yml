@@ -34,15 +34,6 @@ paths:
         description: Resolve all thing descriptions
         example: false
       - in: query
-        name: owner
-        schema:
-          type: array
-          items:
-            type: string
-            example: test@example.com
-        required: false
-        description: Filter by owner
-      - in: query
         name: type
         schema:
           type: array
@@ -51,6 +42,24 @@ paths:
             example: iot:PowerMonitoring
         required: false
         description: Type(s) of the thing
+      - in: query
+        name: sort_by
+        schema:
+          type: string
+          enum: [title, createdAt, updatedAt]
+          default: createdAt
+        required: false
+        description: Sort the thing descriptions by a field
+        example: title
+      - in: query
+        name: sort_order
+        schema:
+          type: string
+          enum: [asc, desc]
+          default: asc
+        required: false
+        description: Sort the thing descriptions in ascending or descending order
+        example: desc
       responses:
         '200':
           description: Successful operation

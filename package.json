@@ -25,6 +25,9 @@
     "prisma": "^5.15.1",
     "standard": "^13.1.0"
   },
+  "standard": {
+    "env": [ "mocha", "node" ]
+  },
   "dependencies": {
     "@prisma/client": "^5.15.1",
     "@thing-description-playground/defaults": "^1.4.0",

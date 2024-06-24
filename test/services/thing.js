@@ -23,8 +23,10 @@ const {
 const datasets = [
   'tenant-id',
   'tenant-id-customer-id',
+  'tenant-id-customer-id-2',
   'tenant-id-2',
-  'tenant-id-2-customer-id'
+  'tenant-id-2-customer-id',
+  'tenant-id-2-customer-id-2'
 ]
 
 describe('Thing Service', () => {
@@ -213,7 +215,9 @@ describe('Thing Service', () => {
     it('should find things based on pagination page', async () => {
       const resultPage1 = await find('tenant-id', 'customer-id', {
         page: 1,
-        page_size: 10
+        page_size: 10,
+        sort_by: 'createdAt',
+        sort_order: 'asc'
       })
       expect(resultPage1.page).to.equal(1)
       expect(resultPage1.pageSize).to.equal(10)
@@ -237,7 +241,9 @@ describe('Thing Service', () => {
 
       const resultPage2 = await find('tenant-id', 'customer-id', {
         page: 2,
-        page_size: 10
+        page_size: 10,
+        sort_by: 'createdAt',
+        sort_order: 'asc'
       })
       expect(resultPage2.page).to.equal(2)
       expect(resultPage2.pageSize).to.equal(10)
@@ -263,7 +269,9 @@ describe('Thing Service', () => {
     it('should find things based on pagination page_size', async () => {
       const resultPageSize20 = await find('tenant-id', 'customer-id', {
         page: 1,
-        page_size: 40
+        page_size: 40,
+        sort_by: 'createdAt',
+        sort_order: 'asc'
       })
       expect(resultPageSize20.page).to.equal(1)
       expect(resultPageSize20.pageSize).to.equal(40)
@@ -273,7 +281,9 @@ describe('Thing Service', () => {
 
       const resultPageSize5 = await find('tenant-id', 'customer-id', {
         page: 1,
-        page_size: 5
+        page_size: 5,
+        sort_by: 'createdAt',
+        sort_order: 'asc'
       })
       expect(resultPageSize5.page).to.equal(1)
       expect(resultPageSize5.pageSize).to.equal(5)
@@ -286,7 +296,9 @@ describe('Thing Service', () => {
       const resultClassFix = await find('tenant-id', 'customer-id', {
         type: ['class_fix'],
         page: 1,
-        page_size: 100
+        page_size: 100,
+        sort_by: 'createdAt',
+        sort_order: 'asc'
       })
       expect(resultClassFix.page).to.equal(1)
       expect(resultClassFix.pageSize).to.equal(100)
@@ -300,55 +312,356 @@ describe('Thing Service', () => {
         ])
       }
 
-      const resultClass1 = await find('tenant-id', 'customer-id', {
-        type: ['class_1'],
+      for (let i = 0; i < 20; i++) {
+        const resultClassI = await find('tenant-id', 'customer-id', {
+          type: [`class_${i}`],
+          page: 1,
+          page_size: 100,
+          sort_by: 'createdAt',
+          sort_order: 'asc'
+        })
+        expect(resultClassI.page).to.equal(1)
+        expect(resultClassI.pageSize).to.equal(100)
+        expect(resultClassI.totalCount).to.equal(1)
+        expect(resultClassI.totalPages).to.equal(1)
+        expect(resultClassI.things).to.have.lengthOf(1)
+        expect(resultClassI.things[0].types).to.have.all.members([
+          `class_${i}`,
+          'class_fix'
+        ])
+      }
+    })
+
+    it('should return nothing with different customer ID', async () => {
+      const result = await find('tenant-id', 'customer-id-2', {
         page: 1,
-        page_size: 100
+        page_size: 100,
+        sort_by: 'createdAt',
+        sort_order: 'asc'
       })
-      console.log(resultClass1)
-      expect(resultClass1.page).to.equal(1)
-      expect(resultClass1.pageSize).to.equal(100)
-      expect(resultClass1.totalCount).to.equal(1)
-      expect(resultClass1.totalPages).to.equal(1)
-      expect(resultClass1.things).to.have.lengthOf(1)
-      expect(resultClass1.things[0].types).to.have.all.members([
-        'class_1',
-        'class_fix'
-      ])
+      expect(result.page).to.equal(1)
+      expect(result.pageSize).to.equal(100)
+      expect(result.totalCount).to.equal(0)
+      expect(result.totalPages).to.equal(0)
+      expect(result.things).to.have.lengthOf(0)
+    })
+
+    it('should return nothing with different tenant ID', async () => {
+      const result = await find('tenant-id-2', 'customer-id', {
+        page: 1,
+        page_size: 100,
+        sort_by: 'createdAt',
+        sort_order: 'asc'
+      })
+      expect(result.page).to.equal(1)
+      expect(result.pageSize).to.equal(100)
+      expect(result.totalCount).to.equal(0)
+      expect(result.totalPages).to.equal(0)
+      expect(result.things).to.have.lengthOf(0)
+    })
+
+    it('should return nothing with different tenant ID and customer ID', async () => {
+      const result = await find('tenant-id-2', 'customer-id-2', {
+        page: 1,
+        page_size: 100,
+        sort_by: 'createdAt',
+        sort_order: 'asc'
+      })
+      expect(result.page).to.equal(1)
+      expect(result.pageSize).to.equal(100)
+      expect(result.totalCount).to.equal(0)
+      expect(result.totalPages).to.equal(0)
+      expect(result.things).to.have.lengthOf(0)
     })
   })
 
   describe('findOne', () => {
-    it('should find a thing by its ID, tenant ID, and customer ID', async () => {})
+    beforeEach(async () => {
+      await prisma.thing.deleteMany({})
+      for (const dataset of datasets) {
+        await createDataset(dataset)
+      }
+      await create(
+        {
+          ...tdValid,
+          id: 'urn:dev:ops:test:001'
+        },
+        'tenant-id',
+        'customer-id'
+      )
+    })
 
-    it('should throw ThingNotFound error if the thing is not found', async () => {})
-  })
+    afterEach(async () => {
+      await prisma.thing.deleteMany({})
+      for (const dataset of datasets) {
+        await removeDataset(dataset)
+      }
+    })
 
-  describe('findOneOpenApi', () => {
-    it('should find a Thing in the registry by ID and convert its description to OpenAPI format', async () => {})
-  })
+    it('should find a thing by its ID, tenant ID, and customer ID', async () => {
+      const thing = await findOne(
+        'urn:dev:ops:test:001',
+        'tenant-id',
+        'customer-id'
+      )
+      expect(thing.description.id).to.equal('urn:dev:ops:test:001')
+      expect(thing.description.title).to.equal('MyLampThing')
+    })
 
-  describe('update', () => {
-    it('should update a thing with the provided description, tenant ID, and customer ID', async () => {
-      // Test case implementation
+    it('should find thing by its ID and tenant ID only', async () => {
+      const thing = await findOne('urn:dev:ops:test:001', 'tenant-id')
+      expect(thing.description.id).to.equal('urn:dev:ops:test:001')
+      expect(thing.description.title).to.equal('MyLampThing')
     })
 
     it('should throw ThingNotFound error if the thing is not found', async () => {
-      // Test case implementation
+      try {
+        await findOne('urn:dev:ops:test:002', 'tenant-id', 'customer-id')
+        throw new Error('This should not be reached')
+      } catch (error) {
+        expect(error).to.be.instanceOf(ThingNotFound)
+      }
+    })
+  })
+
+  describe('findOneOpenApi', () => {
+    beforeEach(async () => {
+      await prisma.thing.deleteMany({})
+      for (const dataset of datasets) {
+        await createDataset(dataset)
+      }
+      await create(
+        {
+          ...tdValid,
+          id: 'urn:dev:ops:test:001'
+        },
+        'tenant-id',
+        'customer-id'
+      )
+    })
+
+    afterEach(async () => {
+      await prisma.thing.deleteMany({})
+      for (const dataset of datasets) {
+        await removeDataset(dataset)
+      }
+    })
+
+    it('should find a Thing in the registry by ID and convert its description to OpenAPI format', async () => {
+      const openApi = await findOneOpenApi(
+        'urn:dev:ops:test:001',
+        'tenant-id',
+        'customer-id'
+      )
+      expect(openApi.openapi).to.equal('3.0.3')
+      expect(openApi.info.title).to.equal('MyLampThing')
+      expect(openApi.info.version).to.equal('unknown')
+    })
+  })
+
+  describe('update', () => {
+    beforeEach(async () => {
+      await prisma.thing.deleteMany({})
+      for (const dataset of datasets) {
+        await createDataset(dataset)
+      }
+      await create(
+        {
+          ...tdValid,
+          id: 'urn:dev:ops:test:001'
+        },
+        'tenant-id',
+        'customer-id'
+      )
+    })
+
+    afterEach(async () => {
+      await prisma.thing.deleteMany({})
+      for (const dataset of datasets) {
+        await removeDataset(dataset)
+      }
+    })
+
+    it('should update a thing with the provided description, tenant ID, and customer ID', async () => {
+      const updated = await update(
+        {
+          ...tdValid,
+          id: 'urn:dev:ops:test:001',
+          title: 'MyLampThingUpdated',
+          '@type': ['class1', 'class2']
+        },
+        'tenant-id',
+        'customer-id'
+      )
+      expect(updated.id).to.equal('urn:dev:ops:test:001')
+      expect(updated.title).to.equal('MyLampThingUpdated')
+      expect(updated.types).to.have.all.members(['class1', 'class2'])
+    })
+
+    it('should throw ThingNotFound error if the thing is not found', async () => {
+      try {
+        await update(
+          {
+            ...tdValid,
+            id: 'urn:dev:ops:test:002'
+          },
+          'tenant-id',
+          'customer-id'
+        )
+        throw new Error('This should not be reached')
+      } catch (error) {
+        expect(error).to.be.instanceOf(ThingNotFound)
+      }
     })
 
     it('should throw InvalidDescription error if the description is invalid', async () => {
-      // Test case implementation
+      try {
+        await update(
+          {
+            ...tdInvalid,
+            id: 'urn:dev:ops:test:001'
+          },
+          'tenant-id',
+          'customer-id'
+        )
+        throw new Error('This should not be reached')
+      } catch (error) {
+        expect(error).to.be.instanceOf(InvalidDescription)
+      }
+    })
+
+    it('should throw ThingNotFound error if the thing is not found with different customer id', async () => {
+      try {
+        await update(
+          {
+            ...tdValid,
+            id: 'urn:dev:ops:test:001'
+          },
+          'tenant-id',
+          'customer-id-2'
+        )
+        throw new Error('This should not be reached')
+      } catch (error) {
+        expect(error).to.be.instanceOf(ThingNotFound)
+      }
+    })
+
+    it('should not throw ThingNotFound error if no customer id is provided', async () => {
+      await update(
+        {
+          ...tdValid,
+          id: 'urn:dev:ops:test:001'
+        },
+        'tenant-id'
+      )
+    })
+
+    it('should throw ThingNotFound error if the thing is not found with different tenant id', async () => {
+      try {
+        await update(
+          {
+            ...tdValid,
+            id: 'urn:dev:ops:test:001'
+          },
+          'tenant-id-2',
+          'customer-id'
+        )
+        throw new Error('This should not be reached')
+      } catch (error) {
+        expect(error).to.be.instanceOf(ThingNotFound)
+      }
     })
   })
 
   describe('assignCustomer', () => {
-    it('should assign a new customer to a thing', async () => {
-      // Test case implementation
+    beforeEach(async () => {
+      await prisma.thing.deleteMany({})
+      for (const dataset of datasets) {
+        await createDataset(dataset)
+      }
+      await create(
+        {
+          ...tdValid,
+          id: 'urn:dev:ops:test:001'
+        },
+        'tenant-id',
+        'customer-id'
+      )
     })
 
-    it('should throw ThingNotFound error if the thing is not found', async () => {
-      // Test case implementation
+    afterEach(async () => {
+      await prisma.thing.deleteMany({})
+      for (const dataset of datasets) {
+        await removeDataset(dataset)
+      }
+    })
+
+    it('should assign a new customer to a thing', async () => {
+      await assignCustomer(
+        'urn:dev:ops:test:001',
+        'tenant-id',
+        'customer-id',
+        'customer-id-2'
+      )
+      await findOne('urn:dev:ops:test:001', 'tenant-id', 'customer-id-2')
+      try {
+        await findOne('urn:dev:ops:test:001', 'tenant-id', 'customer-id')
+        throw new Error('This should not be reached')
+      } catch (error) {
+        expect(error).to.be.instanceOf(ThingNotFound)
+      }
+    })
+
+    it('should throw ThingNotFound if wrong customer ID is provided', async () => {
+      try {
+        await assignCustomer(
+          'urn:dev:ops:test:001',
+          'tenant-id',
+          'customer-id-2',
+          'customer-id'
+        )
+        throw new Error('This should not be reached')
+      } catch (error) {
+        expect(error).to.be.instanceOf(ThingNotFound)
+      }
+    })
+
+    it('should throw ThingNotFound if the thing is not found', async () => {
+      try {
+        await assignCustomer(
+          'urn:dev:ops:test:002',
+          'tenant-id',
+          'customer-id',
+          'customer-id-2'
+        )
+        throw new Error('This should not be reached')
+      } catch (error) {
+        expect(error).to.be.instanceOf(ThingNotFound)
+      }
+    })
+
+    it('should throw ThingNotFound if the thing is not found if wrong tenant ID is provided', async () => {
+      try {
+        await assignCustomer(
+          'urn:dev:ops:test:001',
+          'tenant-id-2',
+          'customer-id',
+          'customer-id-2'
+        )
+        throw new Error('This should not be reached')
+      } catch (error) {
+        expect(error).to.be.instanceOf(ThingNotFound)
+      }
+    })
+
+    it('should not throw ThingNotFound if no customer ID is provided', async () => {
+      await assignCustomer(
+        'urn:dev:ops:test:001',
+        'tenant-id',
+        'customer-id',
+        'customer-id-2'
+      )
+      await findOne('urn:dev:ops:test:001', 'tenant-id', 'customer-id-2')
     })
   })
 })
