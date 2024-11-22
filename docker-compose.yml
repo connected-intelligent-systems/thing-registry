@@ -29,6 +29,7 @@ services:
     container_name: fuseki
     environment:
       - ADMIN_PASSWORD=fuseki
+      - FUSEKI_DATASET_1=default
     ports:
       - 3030:3030
 
