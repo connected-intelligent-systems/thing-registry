@@ -13,8 +13,8 @@ services:
     environment:
       NODE_ENV: development
       PORT: 8080
-      DATABASE_URL: ${DATABASE_URL}
-      FUSEKI_URL: ${FUSEKI_URL}
+      DATABASE_URL: postgres://postgres:postgres@db:5432/thing_registry
+      FUSEKI_URL: http://fuseki:3030
       FUSEKI_USERNAME: admin
       FUSEKI_PASSWORD: fuseki
     restart: always

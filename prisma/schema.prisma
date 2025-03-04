@@ -18,7 +18,7 @@ model Thing {
   types              String[]
   description        Json
   createdAt          DateTime             @default(now())
-  updatedAt          DateTime             @updatedAt
+  updatedAt          DateTime
 
   @@unique([tenantId, id])
 }
