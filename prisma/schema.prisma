@@ -21,4 +21,5 @@ model Thing {
   updatedAt          DateTime
 
   @@unique([tenantId, id])
+  @@index([tenantId, customerId])
 }
