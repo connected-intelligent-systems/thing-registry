@@ -14,24 +14,12 @@ services:
       NODE_ENV: development
       PORT: 8080
       DATABASE_URL: postgres://postgres:postgres@db:5432/thing_registry
-      FUSEKI_URL: http://fuseki:3030
-      FUSEKI_USERNAME: admin
-      FUSEKI_PASSWORD: fuseki
     restart: always
     ports:
       - 8080:8080
       - 9229:9229
     depends_on: 
       - db
-
-  fuseki:
-    image: stain/jena-fuseki
-    container_name: fuseki
-    environment:
-      - ADMIN_PASSWORD=fuseki
-      - FUSEKI_DATASET_1=default
-    ports:
-      - 3030:3030
 
   db:
     image: postgres

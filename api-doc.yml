@@ -301,26 +301,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServerVersion'
-  /sparql:
-    post:
-      description: SPARQL endpoint
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                query: 
-                  type: string
-                  description: the sparql query
-              required: 
-                - query
-      responses:
-        '200':
-          description: Successful operation
-        '400':
-          description: Invalid SPARQL query
 components:
   schemas:
     ServerVersion:

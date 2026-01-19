@@ -12,7 +12,6 @@ The Thing Registry relies on the following external services:
 
 * PostgreSQL: The PostgreSQL database is used for storing and managing the Thing Descriptions.
 * Redis (optional): Redis is an optional dependency that can be used for caching and improving performance.
-* Fuseki (optional): Fuseki is another optional dependency that can be used as a triple store for storing and querying RDF data.
 
 ## Documentation
 
@@ -26,7 +25,7 @@ To get started, please refer to the `api-doc.yml` file for detailed information 
 
 ### Docker Compose
 
-To run the Thing Registry, you can use Docker Compose to start a preconfigured working environment. The Docker Compose file, `docker-compose.yml`, includes the necessary configuration to set up the required services, such as PostgreSQL, Redis (optional), and Fuseki (optional).
+To run the Thing Registry, you can use Docker Compose to start a preconfigured working environment. The Docker Compose file, `docker-compose.yml`, includes the necessary configuration to set up the required services, such as PostgreSQL, Redis (optional).
 
 By running the following command in the terminal: ```docker-compose up```, you can start the Thing Registry.
 
@@ -46,7 +45,6 @@ The Thing Registry can be configured using the following environment variables:
 * `BASE_PATH`: The base path for the Thing Registry API. Default value is `/api/registry`.
 * `DATABASE_URL`: The URL of the PostgreSQL database. This variable is required for the Thing Registry to connect to the database.
 * `REDIS_URL` (optional): The URL of the Redis server. This variable is optional and can be used for caching and improving performance.
-* `FUSEKI_URL` (optional): The URL of the Fuseki server. This variable is optional and can be used as a triple store for storing and querying RDF data.
 
 ## Authors
 

@@ -10,9 +10,6 @@ const {
   assignCustomer
 } = require('../../lib/services/thing')
 
-const tdValid = require('../data/td_valid.json')
-const tdInvalid = require('../data/td_invalid.json')
-const { createDataset, removeDataset } = require('../../lib/utils/fuseki')
 const { prisma } = require('../../lib/db')
 const {
   ThingAlreadyExists,
@@ -20,29 +17,14 @@ const {
   ThingNotFound
 } = require('../../lib/utils/http_errors')
 
-const datasets = [
-  'tenant-id',
-  'tenant-id-customer-id',
-  'tenant-id-customer-id-2',
-  'tenant-id-2',
-  'tenant-id-2-customer-id',
-  'tenant-id-2-customer-id-2'
-]
-
 describe('Thing Service', () => {
   describe('create', () => {
     before(async () => {
       await prisma.thing.deleteMany({})
-      for (const dataset of datasets) {
-        await createDataset(dataset)
-      }
     })
 
     after(async () => {
       await prisma.thing.deleteMany({})
-      for (const dataset of datasets) {
-        await removeDataset(dataset)
-      }
     })
 
     it('should create a new thing', async () => {
@@ -123,16 +105,10 @@ describe('Thing Service', () => {
   describe('remove', () => {
     before(async () => {
       await prisma.thing.deleteMany({})
-      for (const dataset of datasets) {
-        await createDataset(dataset)
-      }
     })
 
     after(async () => {
       await prisma.thing.deleteMany({})
-      for (const dataset of datasets) {
-        await removeDataset(dataset)
-      }
     })
 
     beforeEach(async () => {
@@ -189,9 +165,6 @@ describe('Thing Service', () => {
   describe('find', () => {
     beforeEach(async () => {
       await prisma.thing.deleteMany({})
-      for (const dataset of datasets) {
-        await createDataset(dataset)
-      }
       for (let i = 0; i < 20; i++) {
         await create(
           {
@@ -207,9 +180,6 @@ describe('Thing Service', () => {
 
     afterEach(async () => {
       await prisma.thing.deleteMany({})
-      for (const dataset of datasets) {
-        await removeDataset(dataset)
-      }
     })
 
     it('should find things based on pagination page', async () => {
@@ -378,9 +348,6 @@ describe('Thing Service', () => {
   describe('findOne', () => {
     beforeEach(async () => {
       await prisma.thing.deleteMany({})
-      for (const dataset of datasets) {
-        await createDataset(dataset)
-      }
       await create(
         {
           ...tdValid,
@@ -393,9 +360,6 @@ describe('Thing Service', () => {
 
     afterEach(async () => {
       await prisma.thing.deleteMany({})
-      for (const dataset of datasets) {
-        await removeDataset(dataset)
-      }
     })
 
     it('should find a thing by its ID, tenant ID, and customer ID', async () => {
@@ -427,9 +391,6 @@ describe('Thing Service', () => {
   describe('findOneOpenApi', () => {
     beforeEach(async () => {
       await prisma.thing.deleteMany({})
-      for (const dataset of datasets) {
-        await createDataset(dataset)
-      }
       await create(
         {
           ...tdValid,
@@ -442,9 +403,6 @@ describe('Thing Service', () => {
 
     afterEach(async () => {
       await prisma.thing.deleteMany({})
-      for (const dataset of datasets) {
-        await removeDataset(dataset)
-      }
     })
 
     it('should find a Thing in the registry by ID and convert its description to OpenAPI format', async () => {
@@ -462,9 +420,6 @@ describe('Thing Service', () => {
   describe('update', () => {
     beforeEach(async () => {
       await prisma.thing.deleteMany({})
-      for (const dataset of datasets) {
-        await createDataset(dataset)
-      }
       await create(
         {
           ...tdValid,
@@ -477,9 +432,6 @@ describe('Thing Service', () => {
 
     afterEach(async () => {
       await prisma.thing.deleteMany({})
-      for (const dataset of datasets) {
-        await removeDataset(dataset)
-      }
     })
 
     it('should update a thing with the provided description, tenant ID, and customer ID', async () => {
@@ -576,9 +528,6 @@ describe('Thing Service', () => {
   describe('assignCustomer', () => {
     beforeEach(async () => {
       await prisma.thing.deleteMany({})
-      for (const dataset of datasets) {
-        await createDataset(dataset)
-      }
       await create(
         {
           ...tdValid,
@@ -591,9 +540,6 @@ describe('Thing Service', () => {
 
     afterEach(async () => {
       await prisma.thing.deleteMany({})
-      for (const dataset of datasets) {
-        await removeDataset(dataset)
-      }
     })
 
     it('should assign a new customer to a thing', async () => {
