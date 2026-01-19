@@ -17,6 +17,9 @@ const {
   ThingNotFound
 } = require('../../lib/utils/http_errors')
 
+const tdValid = require('../data/td_valid.json')
+const tdInvalid = require('../data/td_invalid.json')
+
 describe('Thing Service', () => {
   describe('create', () => {
     before(async () => {

@@ -22,7 +22,7 @@ services:
       - db
 
   db:
-    image: postgres
+    image: postgres:14
     restart: always
     ports:
       - 5432:5432
