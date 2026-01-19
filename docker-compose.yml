@@ -7,7 +7,6 @@ services:
       - ./index.js:/app/index.js
       - ./api-doc.yml:/app/api-doc.yml
       - ./lib:/app/lib
-      - ./plugins:/app/plugins
       - ./prisma:/app/prisma
       - ./test:/app/test
     environment:
